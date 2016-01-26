@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import com.hf.spring.jpa.entity.User;
 import com.hf.spring.jpa.service.UserService;
 
-@Service
+@Component
 public class SystemAuthorizingRealm extends AuthorizingRealm{
 	
 	@Autowired
