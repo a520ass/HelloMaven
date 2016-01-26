@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<!-- 配置自动扫描的包  不扫描 spring mvc  controler控制器-->
+	<!-- 这里写com.spring会出问题。。原因不知 -->
+	<context:component-scan base-package="com.hf.spring.hibernate">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan> 
+	
+	<!-- 加载配置文件   -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:database.properties"/>
+	
+	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}")  方式引用 -->
+    <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>
+	
+     <!-- c3p0连接池  hibernate -->
+     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+     	<property name="jdbcUrl" value="${jdbc.url}"></property>
+     	<property name="user" value="${jdbc.username}"></property>
+     	<property name="password" value="${jdbc.password}"></property>
+     	<property name="driverClass" value="${jdbc.driverClassName}"></property>
+     	
+     	<property name="initialPoolSize" value="${jdbc.pool.init}"></property>
+     	<property name="maxPoolSize" value="${jdbc.pool.maxActive}"></property>
+     </bean>
+    
+    <!-- 配置hibernate 的sessionFactory 实例 -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    	<!-- 配置数据源 -->
+    	<property name="dataSource" ref="dataSource"></property>
+    	<!-- 配置hibernate 配置文件的位置 -->
+    	<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+    	<!-- 配置hibernate 映射文件的位置 -->
+    	<property name="mappingLocations" value="classpath:com/hf/spring/hibernate/entities/*.hbm.xml"></property>
+    	<property name="packagesToScan" value="com.hf.spring.hibernate"></property>
+    </bean>
+    
+    
+	<!--  配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 配置支持基于注解的事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+	<!-- 配置 Spring 的声明式事务 -->
+	<!-- 2. 配置事务属性, 需要事务管理器 
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="purchase" propagation="REQUIRES_NEW"/>
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>-->
+
+	<!-- 3. 配置事务切点, 并把切点和事务属性关联起来 
+	<aop:config>
+		<aop:pointcut expression="execution(* com.hf.spring.hibernate.service.*.*(..))" 
+			id="txPointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>-->
+</beans>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<!-- 配置自动扫描的包  不扫描 spring mvc  controler控制器 -->
+	<context:component-scan base-package="com.hf.spring.mybits">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan> 
+	
+	<!-- 加载配置文件   -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:database.properties"/>
+	
+	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}")  方式引用 -->
+    <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>
+	
+	<!-- mybits -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliasesPackage" value="com.hf.spring.mybits"></property>
+		<!--  
+		<property name="typeAliasesSuperType" value="com.sping.bean.basebean"></property>
+		-->
+		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+		<property name="mapperLocations" value="classpath:/mapper/**/*.xml"></property>
+	</bean>
+	
+	<!-- 自动扫描器 -->
+	<bean id="mapperScreenConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+ 		<property name="annotationClass" value="com.hf.spring.mybits.MyBatisDao"></property>
+ 		<property name="basePackage" value="com.hf.spring.mybits"></property>
+ 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+ 	</bean>
+	
+	<!-- dbcp连接池  mybits-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+          p:driverClassName="${jdbc.driverClassName}" p:url="${jdbc.url}"
+          p:username="${jdbc.username}" p:password="${jdbc.password}"/>
+     
+     <!-- ehcache缓存 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+	</bean>
+	
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 配置支持基于注解的事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>

@@ -1,0 +1,147 @@
+<!--  -->
+	<bean id="car1" class="com.spring.bean.Car">
+		<constructor-arg index="0" value="12306"></constructor-arg>
+    	<constructor-arg value="何锋"></constructor-arg>
+    	<constructor-arg type="char" value="y"></constructor-arg>
+    	<constructor-arg value="1.1f"></constructor-arg>
+	</bean>
+	
+	<!-- 这里使用三个参数的构造函数 -->
+	<bean id="car2" class="com.spring.bean.Car">
+    	<constructor-arg index="0" value="12306"></constructor-arg>
+    	<!--  
+    	<constructor-arg type="java.lang.String">
+    		<value><![CDATA[>>>爱老婆（特殊字符）]]></value>
+    	</constructor-arg>-->
+    	<!-- <null/> 用于String， -->
+    	<constructor-arg><null/></constructor-arg>
+    	<constructor-arg value="1.1f"></constructor-arg>
+    </bean>
+	
+	<!-- 需要一个无参数的构造函数 p命名空间 -->
+	<bean id="car3" class="com.spring.bean.Car" p:id="110" p:name="baoma" p:password="n" p:price="1.2f">
+	</bean>
+	
+	<util:list id="cars">
+		<ref bean="car1"/>
+		<ref bean="car2"/>
+		<ref bean="car3"/>
+	</util:list>
+	
+	<bean id="person" class="com.spring.bean.Person" autowire="byName">
+		<property name="name" value="何锋"></property>
+		<property name="sex" value="男"></property>
+		<!--  利用autowire 自动注入
+		<property name="cars" ref="cars"></property>-->
+	</bean>
+	
+	<!-- 循环依赖。构造(无需getbean，就会检查) 不可以
+	<bean id="circleA" class="com.spring.bean.CircleA">
+		<constructor-arg index="0" ref="circleB"></constructor-arg>
+	</bean>
+	
+	<bean id="circleB" class="com.spring.bean.CircleB">
+		<constructor-arg index="0" ref="circleC"></constructor-arg>
+	</bean>
+	
+	<bean id="circleC" class="com.spring.bean.CircleC">
+		<constructor-arg index="0" ref="circleA"></constructor-arg>
+	</bean> -->
+	
+	<!-- 循环依赖。seter方法 可以
+	<bean id="circleA" class="com.spring.bean.CircleA">
+		<property name="circleB" ref="circleB"></property>
+	</bean>
+	
+	<bean id="circleB" class="com.spring.bean.CircleB">
+		<property name="circleC" ref="circleC"></property>
+	</bean>
+	
+	<bean id="circleC" class="com.spring.bean.CircleC">
+		<property name="circleA" ref="circleA"></property>
+	</bean> -->
+	
+	<!-- 循环依赖。prototype (只有在getbean后才会出错)不可以
+	<bean id="circleA" class="com.spring.bean.CircleA" scope="prototype">
+		<property name="circleB" ref="circleB"></property>
+	</bean>
+	
+	<bean id="circleB" class="com.spring.bean.CircleB" scope="prototype">
+		<property name="circleC" ref="circleC"></property>
+	</bean>
+	
+	<bean id="circleC" class="com.spring.bean.CircleC" scope="prototype">
+		<property name="circleA" ref="circleA"></property>
+	</bean>-->
+	
+	<bean class="com.spring.bean.ResourceBean"/>
+	
+	<bean id="resourceBean1" class="com.spring.bean.ResourceBean3">
+		<property name="resource" value="OSSKey.properties"></property>
+	</bean>
+	
+	<bean id="resourceBean2" class="com.spring.bean.ResourceBean3">
+		<property name="resource" value="classpath:OSSKey.properties"></property>
+	</bean>
+	
+	<bean id="resourceBean41" class="com.spring.bean.ResourceBean4">
+		<property name="resources">
+			<array>
+				<value>com/spring/test1.properties</value>
+				<value>database.properties</value>
+			</array>
+		</property>
+	</bean>
+	
+	<bean id="resourceBean42" class="com.spring.bean.ResourceBean4">
+		<property name="resources" value="classpath*:META-INF/MANIFEST.MF">
+		</property>
+	</bean>
+	
+	<bean id="resourceBean43" class="com.spring.bean.ResourceBean4">
+		<property name="resources">
+			<array>
+				<value>com/spring/test1.properties</value>
+				<value>classpath*:META-INF/MANIFEST.MF</value>
+			</array>
+		</property>
+	</bean>
+	
+	<bean id="car4" class="com.spring.bean.Car" abstract="true">
+		<property name="id" value="41"></property>
+		<property name="name" value="T1"></property>
+	</bean>
+	
+	<bean id="car5" class="com.spring.bean.Car" parent="car4">
+		<property name="password"><value>h</value></property>
+	</bean>
+	
+	<bean id="person4" class="com.spring.bean.Person" p:cars-ref="cars" depends-on="car5">
+		
+	</bean>
+	<bean id="helloWorldService" class="com.spring.service.impl.HelloWorldService"></bean>
+	<!-- AOP test 
+	<bean id="aspect" class="com.spring.aop.HelloWorldAspect"></bean>
+	<aop:config>
+		<aop:pointcut expression="execution(* com.spring..*.sayBefore(..)) and args(s)" id="pointcut"/>
+		<aop:aspect ref="aspect">
+			<aop:before method="beforeAdvice(java.lang.String)" pointcut-ref="pointcut" arg-names="s"/>
+			<aop:around method="aroundAdvice" pointcut="execution(* com.spring..*.sayAround(..))"/>
+			<aop:after method="afterFinallyAdvice" pointcut="execution(* com.spring..*.*(..))"/>
+			<aop:after-returning method="afterReturningAdvice" pointcut="execution(* com.spring..*.sayAfterReturning(..))" arg-names="retVal" returning="retVal"/>
+			<aop:after-throwing method="afterThrowingAdvice" pointcut="execution(* com.spring..*.sayAferThrowing(..))" arg-names="exception" throwing="exception"/>
+			<aop:declare-parents types-matching="com.spring..*.IHelloWorldService+" implement-interface="com.spring.service.IIntroductionService" default-impl="com.spring.service.impl.IntroductiondService"/>
+		</aop:aspect>
+	</aop:config>-->
+	<!-- 匿名切入点 （理解意思）
+	<bean id="aspectSupportBean" class="com.spring.aop.HelloWorldAspect"></bean>
+	<aop:config>
+		<aop:aspect ref="aspectSupportBean">
+			<aop:after method="afterFinallyAdvice" pointcut=""/>
+		</aop:aspect>
+	</aop:config>-->
+	<!--  
+	<bean id="beforeAdvice" class="com.spring.aop.BeforeAdviceImpl"></bean>
+	<aop:config>
+		<aop:advisor advice-ref="beforeAdvice" pointcut="execution(* com.spring..*.sayAdvisorBefore(..))"/>
+	</aop:config>-->

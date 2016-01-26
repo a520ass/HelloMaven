@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/data/repository http://www.springframework.org/schema/data/repository/spring-repository-1.7.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<!-- 配置自动扫描的包  不扫描 spring mvc  controler控制器-->
+	<context:component-scan base-package="com.hf.spring.springdata">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan> 
+	
+	<!-- 加载配置文件   -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:database.properties"/>
+	
+	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}")  方式引用 -->
+    <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>
+
+     <!-- c3p0连接池  hibernate jpa-->
+     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+     	<property name="jdbcUrl" value="${jdbc.url}"></property>
+     	<property name="user" value="${jdbc.username}"></property>
+     	<property name="password" value="${jdbc.password}"></property>
+     	<property name="driverClass" value="${jdbc.driverClassName}"></property>
+     	
+     	<property name="initialPoolSize" value="${jdbc.pool.init}"></property>
+     	<property name="maxPoolSize" value="${jdbc.pool.maxActive}"></property>
+     </bean>
+    
+    <!-- 配置jpa的entityManagerFactory -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    	<property name="dataSource" ref="dataSource"></property>
+    	<property name="jpaVendorAdapter">
+    		<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+    	</property>
+    	<property name="packagesToScan" value="com.hf.spring.springdata"></property>
+    	<property name="jpaProperties">
+    		<props>
+    			<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+    			<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        		<prop key="hibernate.format_sql">false</prop>
+       			<prop key="hibernate.show_sql">true</prop>
+        		<prop key="hibernate.hbm2ddl.auto">update</prop>
+        		
+        		<prop key="hibernate.cache.use_second_level_cache">true</prop>
+        		<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+        		<prop key="hibernate.cache.use_query_cache">true</prop>
+        		<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+    		</props>
+    	</property>
+    	<property name="sharedCacheMode" value="ENABLE_SELECTIVE"></property>
+    </bean>
+    
+    <!-- 配置事务 -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    	<property name="entityManagerFactory" ref="entityManagerFactory"></property>
+    </bean>
+    
+    <!-- 配置支持基于注解的事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <jpa:repositories base-package="com.hf.spring.springdata" entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+</beans>
