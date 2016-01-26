@@ -46,8 +46,8 @@
 	</mvc:interceptors>
 	
 	<!-- 配置直接转发的页面 -->
-	<!-- 直接转发，无需经过Handler
-	<mvc:view-controller path="/" view-name="redirect:sys/login"/> -->
+	<!-- 直接转发，无需经过Handler-->
+	<mvc:view-controller path="/" view-name="redirect:sys/f"/> 
 	
 	<!--  
 		default-servlet-handler 将在 SpringMVC 上下文中定义一个 DefaultServletHttpRequestHandler,
@@ -85,7 +85,7 @@
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
 		<property name="proxyTargetClass" value="true" />
 	</bean>
-	<!--
+	
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
@@ -94,7 +94,7 @@
 			</props>
 			</property>
 	</bean>
-	 支持Shiro对Controller的方法级AOP安全控制 end -->
+	<!--支持Shiro对Controller的方法级AOP安全控制 end -->
 	
 	<!-- 上传文件拦截，设置最大上传文件大小   10M=10*1024*1024(B)=10485760 bytes -->  
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
