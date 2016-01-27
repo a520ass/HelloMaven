@@ -11,7 +11,7 @@
 	$(document).ready(function(){
 		$("#testjson").click(function(){
 			$.ajax({
-                url: "test/testjson",
+                url: "${ctx}/test/testjson",
                 type: "get",  
                 contentType: "application/json;charset=utf-8",//设置内容的类型
                 dataType: "text",//设置data的类型
@@ -40,6 +40,8 @@
 		Desc:<input type="text" name="desc">
 		<input type="submit" value="sumit">
 	</form>
+	<br>
+	<a href="${ctx}/test/downloadfile">downloadFile</a>
 	<br>
 	<a href="test/testResponseEntity">testResponseEntity</a>
 	<br>

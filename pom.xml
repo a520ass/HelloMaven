@@ -343,7 +343,7 @@
 		</dependency>
 		<!-- LOGGING end -->
 		
-		<!-- aliyun-openservices 
+		<!-- aliyun-openservices -->
 		<dependency>
 			<groupId>com.aliyun.openservices</groupId>
 			<artifactId>aliyun-openservices</artifactId>
@@ -354,8 +354,8 @@
 					<artifactId>httpclient</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>-->
-		<!-- aliyun sdk 
+		</dependency>
+		<!-- aliyun sdk -->
 		<dependency>
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
@@ -366,7 +366,7 @@
 					<groupId>commons-logging</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>-->
+		</dependency>
 		
 		<!-- fastjson -->
 		<dependency>
@@ -374,12 +374,12 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.4</version>
 		</dependency>
-		<!-- org json 
+		<!-- org json -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20140107</version>
-		</dependency>-->
+		</dependency>
 		
 		<!-- jackson json -->
 		<dependency>
@@ -422,12 +422,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.36</version>
 		</dependency>
-		<!-- oracledb 
+		<!-- oracledb -->
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.4.0</version>
-		</dependency>-->
+		</dependency>
 		<!-- hsqldb 
 		<dependency>
 			<groupId>org.hsqldb</groupId>

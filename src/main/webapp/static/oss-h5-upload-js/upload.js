@@ -24,7 +24,7 @@ function send_request()
   
     if (xmlhttp!=null)
     {
-        servetUrl = 'upload';
+        servetUrl = 'http://127.0.0.1:8080/HelloMaven/test/osswebupload';
         xmlhttp.open( "GET", servetUrl, false );
         xmlhttp.send( null );
         return xmlhttp.responseText

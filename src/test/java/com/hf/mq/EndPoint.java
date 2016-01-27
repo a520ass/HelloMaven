@@ -16,7 +16,9 @@ public abstract class EndPoint {
 		this.endPointName=endPointName;
 		
 		ConnectionFactory factory=new ConnectionFactory();
-		factory.setHost("localhost");
+		factory.setHost("10.10.3.118");
+		factory.setUsername("hotusm");
+		factory.setPassword("1234");
 		connection=factory.newConnection();
 		channel=connection.createChannel();
 		channel.queueDeclare(endPointName, false, false, false, null);

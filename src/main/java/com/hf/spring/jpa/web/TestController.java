@@ -1,11 +1,11 @@
 package com.hf.spring.jpa.web;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -15,13 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.authz.annotation.RequiresUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aliyun.webupload.WebUploadUtils;
 import com.hf.spring.jpa.common.mapper.JsonMapper;
-import com.hf.spring.jpa.entity.Employee;
 import com.hf.spring.jpa.service.DepartmentService;
 import com.hf.spring.jpa.service.EmployeeService;
 import com.hf.spring.jpa.service.UserService;
@@ -72,10 +69,56 @@ public class TestController {
 		return "redirect:success";
 	}
 	
-	@RequiresPermissions("sys:insert")
+	@RequiresPermissions("sys:edit")
 	@RequestMapping("/success")
 	public String success(){
 		return "success";
+	}
+	
+	
+	@RequestMapping(value="/testupload",method=RequestMethod.GET)
+	public String testOssWebUpload(HttpServletRequest request,
+			HttpServletResponse response){
+		return "ossupload";
+	}
+	
+	@RequestMapping("downloadfile")
+	public void downloadFile(HttpServletRequest request,
+			HttpServletResponse response) {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		byte[] b = new byte[1024];
+		int n = 0;
+		try {
+			inputStream = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream("/note.txt");
+			outputStream = response.getOutputStream();
+			response.setContentType("application/force-download");
+			String filename = "test.txt";
+			response.addHeader("Content-Disposition", "attachment;filename="
+					+ URLEncoder.encode(filename, "UTF-8"));
+			while ((n = inputStream.read(b)) != -1) {
+				outputStream.write(b, 0, n);
+			}
+			outputStream.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	@ResponseBody
@@ -87,6 +130,14 @@ public class TestController {
 		response.getWriter().flush();
 		response.getWriter().close();*/
 		return JsonMapper.toJsonString(employeeService.findEmployees());
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/osswebupload",method=RequestMethod.GET)
+	public String ossWebUpload(HttpServletRequest request,
+			HttpServletResponse response) throws IOException{
+		Map<String,String> postpolicy=WebUploadUtils.getPostPolicy();
+		return JsonMapper.toJsonString(postpolicy);
 	}
 	
 	@ResponseBody
