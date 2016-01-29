@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
-@Table(name="JPA_EMPLOYEES")	//¹ÍÔ±
+@Table(name="JPA_EMPLOYEES")	//é›‡å‘˜
 @Entity
 public class Employee implements Serializable{
 	
@@ -39,19 +39,19 @@ public class Employee implements Serializable{
 	private String lastName;
 	@Email
 	private String email;
-	//Ö±½ÓÔÚdateÀàĞÍÉÏ¼ÓÈë×¢½â£¬Í¬Ê±Ö¸¶¨¸ñÊ½ÑùÊ½(»òÕßÊ¹ÓÃ×Ô¶¨ÒåÀàĞÍ×ª»»Æ÷)
+	//ç›´æ¥åœ¨dateç±»å‹ä¸ŠåŠ å…¥æ³¨è§£ï¼ŒåŒæ—¶æŒ‡å®šæ ¼å¼æ ·å¼(æˆ–è€…ä½¿ç”¨è‡ªå®šä¹‰ç±»å‹è½¬æ¢å™¨)
 	@Past
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;
-	//floatÀàĞÍÓÃ@NumberFormat×¢½â  @NumberFormat(pattern="#,###,###.#")
+	//floatç±»å‹ç”¨@NumberFormatæ³¨è§£  @NumberFormat(pattern="#,###,###.#")
 	@Past
 	@DateTimeFormat(pattern="yyyy-MM-dd hh:mm:ss")
 	private Date createTime;
-	private Department department;//²¿ÃÅ
+	private Department department;//éƒ¨é—¨
 	
-	//ÔÚget·½·¨µÄÇ°Ãæ×¢½â¡£²»×¢½âµÄ£¬Ä¬ÈÏ×¢½âÎª@Basic
+	//åœ¨getæ–¹æ³•çš„å‰é¢æ³¨è§£ã€‚ä¸æ³¨è§£çš„ï¼Œé»˜è®¤æ³¨è§£ä¸º@Basic
 	
-	@GeneratedValue(strategy=GenerationType.AUTO)//Ä¬ÈÏÊÇauto Ò²¿ÉÒÔ²»Ğ´£¬×Ô¶¯µİÔö
+	@GeneratedValue(strategy=GenerationType.AUTO)//é»˜è®¤æ˜¯auto ä¹Ÿå¯ä»¥ä¸å†™ï¼Œè‡ªåŠ¨é€’å¢
 	@Id
 	public Integer getId() {
 		return id;
@@ -72,7 +72,7 @@ public class Employee implements Serializable{
 		this.email = email;
 	}
 	
-	//TemporalÓÃÓÚÖ¸¶¨Date¾«¶È£¨DATE£ºµ¥¶ÀÈÕÆÚ¡£TIME£ºÊ±¼ä¡£TIMESTAMP£ºÈÕÆÚÊ±¼ä£©
+	//Temporalç”¨äºæŒ‡å®šDateç²¾åº¦ï¼ˆDATEï¼šå•ç‹¬æ—¥æœŸã€‚TIMEï¼šæ—¶é—´ã€‚TIMESTAMPï¼šæ—¥æœŸæ—¶é—´ï¼‰
 	@Temporal(TemporalType.DATE)
 	public Date getBirth() {
 		return birth;
@@ -90,7 +90,7 @@ public class Employee implements Serializable{
 	}
 	
 	/**
-	 * ÀÁ¼ÓÔØLAZY Department
+	 * æ‡’åŠ è½½LAZY Department
 	 * @return
 	 */
 	@JoinColumn(name="DEPARTMENT_ID")
@@ -103,7 +103,7 @@ public class Employee implements Serializable{
 	}
 	
 	@Transient
-	//¹¤¾ß·½·¨£¬²»ĞèÒªÓ³ÉäÎªÊı¾İ±í
+	//å·¥å…·æ–¹æ³•ï¼Œä¸éœ€è¦æ˜ å°„ä¸ºæ•°æ®è¡¨
 	public String getInfo(){
 		return "lastName"+lastName+",email"+email;
 	}

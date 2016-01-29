@@ -22,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	@Override
 	public void saveEmployee(Employee employee) {
 		// TODO Auto-generated method stub
-		employeeDao.save(employee);
+			employeeDao.save(employee);
 	}
 
 	@Override

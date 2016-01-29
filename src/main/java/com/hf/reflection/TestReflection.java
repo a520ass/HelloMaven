@@ -121,7 +121,7 @@ public class TestReflection {
 		TestReflection t1 = (TestReflection) c1.newInstance(); // 利用反射来创建类的对象
 		System.out.println("username == " + t1.username);
 		System.out.println("password == " + t1.password);
-		Method method = c1.getDeclaredMethod("setUserName", String.class);
+		Method method = c1.getDeclaredMethod("setUserName", new Class[]{String.class});
 		method.invoke(t1, "Java反射的学习");
 		System.out.println("username == " + t1.username);
 		method = c1.getDeclaredMethod("setPassWord", String.class);

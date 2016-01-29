@@ -36,14 +36,17 @@ public class DepartmentController {
 	public void getEmployee(@RequestParam(value="id",required=false) Integer id,
 			Map<String, Object> map){
 		if(id!=null){
-			map.put("employee", employeeService.findEmplyeeById(id));
+			Employee employee=employeeService.findEmplyeeById(id);
+			//employee.setDepartment(null);
+			map.put("employee", employee);
+			
 		}
 	}
 	/**
-	 * form±íµ¥Ìá½» DateÀàÐÍÊý¾Ý°ó¶¨(ÈçºÎÊ¹ÓÃ£¿)
-	 * <¹¦ÄÜÏêÏ¸ÃèÊö>
+	 * formï¿½ï¿½ï¿½á½» Dateï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½(ï¿½ï¿½ï¿½Ê¹ï¿½Ã£ï¿½)
+	 * <ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½>
 	 * @param binder
-	 * @see [Àà¡¢Àà#·½·¨¡¢Àà#³ÉÔ±]
+	 * @see [ï¿½à¡¢ï¿½ï¿½#ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½#ï¿½ï¿½Ô±]
 	 *//*
 	@InitBinder  
 	public void initBinder(WebDataBinder binder) {  

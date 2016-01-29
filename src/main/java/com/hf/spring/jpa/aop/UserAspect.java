@@ -20,13 +20,15 @@ public class UserAspect {
 
 		(..)：表示方法的参数是任意的。
 	 */
-	//@Around("execution(* com.hf.spring.jpa.service.impl.UserServiceImpl.*(..))")
+	@Around("execution(* com.hf.spring.jpa.service.impl.*.*(..))")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable{
 		//beforeAdvice();
 		Object[] args=pjp.getArgs();
 		if(args.length>0){
 			for(int i=0;i<args.length;i++){
+				//System.out.println(args[i].getClass().getName());
 				if(args[i]==null){
+					
 				}
 			}
 		}else{
@@ -41,7 +43,7 @@ public class UserAspect {
 		}
 		
 		if(result==null){
-			result="";
+			//result="";
 		}else{
 			
 		}

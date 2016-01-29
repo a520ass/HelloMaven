@@ -27,11 +27,14 @@
             }); */
 			return false;
 		});
+		
+		//$(".media").media({width:1366, height:400});
 	});
 </script>
 </head>
 <body>
-	<h1>这是首页。。。。。。。</h1>
+	<h1>这是首页。。。。。。。</h1><a href="${ctx}/sys/logout">退出</a><br>
+	<a class="media" href="http://hftest.oss-cn-beijing.aliyuncs.com/upload/file/20151127/1448602013595027188.pdf">pdf</a>
 	<a href="test/i18n?locale=en_US">英文</a>&nbsp;
 	<a href="test/i18n?locale=zh_CH">中文</a>
 	<br>
@@ -45,6 +48,7 @@
 	<br>
 	<a href="test/testResponseEntity">testResponseEntity</a>
 	<br>
+	<shiro:hasPermission name="sys:view">
 	<form action="test/testHttpMessageConverter" method="post" enctype="multipart/form-data">
 		File:<input type="file" name="file">
 		Desc:<input type="text" name="desc">
@@ -133,5 +137,6 @@
 			type="text" name="price" value="1.3f"><br> <input
 			type="submit" value="testModelAttribute">
 	</form>
+	</shiro:hasPermission>
 </body>
 </html>

@@ -44,8 +44,8 @@
 					<td>${emp.email }</td>
 					<td>${emp.birth }</td>
 					<td>${emp.department.departmentName }</td>
-					<td><a href="emp/${emp.id }">编辑</a></td>
-					<td><a href="emp/${emp.id }" class="delete">删除</a></td>
+					<td><a href="${ctx}/emp/${emp.id }">编辑</a></td>
+					<td><a href="${ctx}/emp/${emp.id }" class="delete">删除</a></td>
 				</tr>
 			</c:forEach>
 		</table>

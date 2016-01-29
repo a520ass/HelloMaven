@@ -48,7 +48,7 @@
 				/userfiles/** = anon
 				/sys/login =authc
 				/sys/logout =logout
-				/sys/**=user
+				/**=user
 			</value>
 		</constructor-arg>
 	</bean>
