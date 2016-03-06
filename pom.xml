@@ -33,6 +33,7 @@
 	<dependencies>
 	
 		<!-- hibernate -->
+		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -505,6 +506,22 @@
 	        <artifactId>amqp-client</artifactId>
 	        <version>3.4.2</version>
 		</dependency>
+		
+		<dependency>  
+		    <groupId>org.apache.oltu.oauth2</groupId>  
+		    <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>  
+		    <version>1.0.0</version>  
+		</dependency>  
+		<dependency>  
+		    <groupId>org.apache.oltu.oauth2</groupId>  
+		    <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>  
+		    <version>1.0.0</version>  
+		</dependency>
+		<dependency>  
+			<groupId>org.apache.oltu.oauth2</groupId>  
+			<artifactId>org.apache.oltu.oauth2.client</artifactId>  
+			<version>1.0.0</version>  
+		</dependency>
 
 		<!-- test -->
 		<dependency>
@@ -523,7 +540,7 @@
 		        <version>3.3</version>
 		        <configuration>  
 		            <source>${java-version}</source>  
-		            <target>${java-version}</target>  
+		            <target>${java-version}</target>
 		        </configuration> 
 			</plugin>
 		</plugins>

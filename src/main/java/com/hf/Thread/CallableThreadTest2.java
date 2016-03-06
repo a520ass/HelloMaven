@@ -15,9 +15,9 @@ public class CallableThreadTest2 {
 		String result = "";
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		FutureTask<String> future = new FutureTask<String>(
-				new Callable<String>() {// Ê¹ÓÃCallable½Ó¿Ú×÷Îª¹¹Ôì²ÎÊı
+				new Callable<String>() {// ä½¿ç”¨Callableæ¥å£ä½œä¸ºæ„é€ å‚æ•°
 					public String call() {
-						// ÕæÕıµÄÈÎÎñÔÚÕâÀïÖ´ĞĞ£¬ÕâÀïµÄ·µ»ØÖµÀàĞÍÎªString£¬¿ÉÒÔÎªÈÎÒâÀàĞÍ
+						// çœŸæ­£çš„ä»»åŠ¡åœ¨è¿™é‡Œæ‰§è¡Œï¼Œè¿™é‡Œçš„è¿”å›å€¼ç±»å‹ä¸ºStringï¼Œå¯ä»¥ä¸ºä»»æ„ç±»å‹
 						try {
 							Thread.sleep(1000L);
 						} catch (InterruptedException e) {
@@ -29,11 +29,11 @@ public class CallableThreadTest2 {
 					}
 				});
 		executor.execute(future);
-		// ÔÚÕâÀï¿ÉÒÔ×ö±ğµÄÈÎºÎÊÂÇé
+		// åœ¨è¿™é‡Œå¯ä»¥åšåˆ«çš„ä»»ä½•äº‹æƒ…
 		try {
-			result = future.get(5000, TimeUnit.MILLISECONDS); // È¡µÃ½á¹û£¬Í¬Ê±ÉèÖÃ³¬Ê±Ö´ĞĞÊ±¼äÎª5Ãë¡£Í¬Ñù¿ÉÒÔÓÃfuture.get()£¬²»ÉèÖÃÖ´ĞĞ³¬Ê±Ê±¼äÈ¡µÃ½á¹û
+			result = future.get(5000, TimeUnit.MILLISECONDS); // å–å¾—ç»“æœï¼ŒåŒæ—¶è®¾ç½®è¶…æ—¶æ‰§è¡Œæ—¶é—´ä¸º5ç§’ã€‚åŒæ ·å¯ä»¥ç”¨future.get()ï¼Œä¸è®¾ç½®æ‰§è¡Œè¶…æ—¶æ—¶é—´å–å¾—ç»“æœ
 		} catch (InterruptedException e) {
-			// System.out.println("ÈÎÎñÒÑ¾­È¡Ïû");
+			// System.out.println("ä»»åŠ¡å·²ç»å–æ¶ˆ");
 			future.cancel(true);
 		} catch (ExecutionException e) {
 			future.cancel(true);

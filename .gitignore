@@ -10,4 +10,4 @@ target/
 .settings/
 .classpath
 .project
-.springBeans
+.springBeans/.apt_generated

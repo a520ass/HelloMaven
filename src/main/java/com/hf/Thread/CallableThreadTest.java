@@ -11,15 +11,15 @@ public class CallableThreadTest implements Callable<Boolean>{
 		FutureTask<Boolean> ft=new FutureTask<>(callable);
 		for(int i = 0;i < 100;i++)  
         {  
-            System.out.println(Thread.currentThread().getName()+" µÄÑ­»·±äÁ¿iµÄÖµ"+i);  
+            System.out.println(Thread.currentThread().getName()+" çš„å¾ªçŽ¯å˜é‡içš„å€¼"+i);  
             if(i==20)  
             {  
-                new Thread(ft,"ÓÐ·µ»ØÖµµÄÏß³Ì").start();  
+                new Thread(ft,"æœ‰è¿”å›žå€¼çš„çº¿ç¨‹").start();  
             }  
         }
 		try  
         {  
-            System.out.println("×ÓÏß³ÌµÄ·µ»ØÖµ£º"+ft.get());  
+            System.out.println("å­çº¿ç¨‹çš„è¿”å›žå€¼ï¼š"+ft.get());  
         } catch (InterruptedException e)  
         {  
             e.printStackTrace();  
