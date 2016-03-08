@@ -1,7 +1,9 @@
 package com.hf.spring.springdata.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -34,7 +36,7 @@ public class Order {
 	}
 	
 	@JoinColumn(name="CUSTOMER_ID")
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.REFRESH,fetch=FetchType.LAZY)
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -44,18 +46,5 @@ public class Order {
 	public Order() {
 		super();
 	}
-	public Order(Integer id, String orderName, Customer customer) {
-		super();
-		this.id = id;
-		this.orderName = orderName;
-		this.customer = customer;
-	}
-	@Override
-	public String toString() {
-		return "Order [id=" + id + ", orderName=" + orderName + ", customer="
-				+ customer + "]";
-	}
-	
-	
 
 }

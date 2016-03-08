@@ -1,16 +1,24 @@
 package com.hf.spring.springdata.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@Cacheable(true)
 @Table(name="SJPA_CUTOMERS")
 @Entity
 public class Customer {
@@ -21,6 +29,8 @@ public class Customer {
 	private int age;
 	private Date createdTime;
 	private Date birth;
+	
+	private Set<Order> orders =new HashSet<>();
 	
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Id
@@ -66,26 +76,18 @@ public class Customer {
 	public void setBirth(Date birth) {
 		this.birth = birth;
 	}
+	
+	//单向1-n的关联关系
+	//@JoinColumn(name="CUSTOMER_ID")
+	@OneToMany(cascade=CascadeType.REMOVE,fetch = FetchType.LAZY,mappedBy="customer")
+	public Set<Order> getOrders() {
+		return orders;
+	}
+	public void setOrders(Set<Order> orders) {
+		this.orders = orders;
+	}
 	public Customer() {
 		super();
 	}
-	public Customer(Integer id, String lastName, String email, int age,
-			Date createdTime, Date birth) {
-		super();
-		this.id = id;
-		this.lastName = lastName;
-		this.email = email;
-		this.age = age;
-		this.createdTime = createdTime;
-		this.birth = birth;
-	}
-	@Override
-	public String toString() {
-		return "Customer [id=" + id + ", lastName=" + lastName + ", email="
-				+ email + ", age=" + age + ", createdTime=" + createdTime
-				+ ", birth=" + birth + "]";
-	}
 	
-	
-
 }

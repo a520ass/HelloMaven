@@ -71,7 +71,17 @@
         		<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
     		</props>
     	</property>
-    	<!-- <prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>，则不需要在实体内配置hibernate的 @cache标记，只要打上JPA的@cacheable标记即可默认开启该实体的2级缓存--> 
+    	
+    	<!-- 
+		配置二级缓存的策略 
+		ALL：所有的实体类都被缓存
+		NONE：所有的实体类都不被缓存. 
+		ENABLE_SELECTIVE：标识 @Cacheable(true) 注解的实体类将被缓存
+		DISABLE_SELECTIVE：缓存除标识 @Cacheable(false) 以外的所有实体类
+		UNSPECIFIED：默认值，JPA 产品默认值将被使用
+		
+    	 -->
+    	<!-- 或者这样配置  在jpaProperties中  <prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>，则不需要在实体内配置hibernate的 @cache标记，只要打上JPA的@cacheable标记即可默认开启该实体的2级缓存--> 
     	<property name="sharedCacheMode" value="ENABLE_SELECTIVE"></property>
     </bean>
     
