@@ -56,6 +56,7 @@ public class SpringDataTest {
 		CustomerRepository customerRepository=ctx.getBean(CustomerRepository.class);
 		Customer customer1=customerRepository.findMaxIdCustomer();
 		Customer customer2=customerRepository.findMaxIdCustomer();
+		log.warn("warn日志。。。");
 	}
 	
 	@Test
