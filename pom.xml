@@ -161,6 +161,12 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>test</scope>
+		</dependency>
 		
 		<!-- spring data jpa -->
 		<dependency>
@@ -506,6 +512,12 @@
 	        <artifactId>amqp-client</artifactId>
 	        <version>3.4.2</version>
 		</dependency>
+		<dependency>
+	<groupId>org.springframework.amqp</groupId>
+	<artifactId>spring-rabbit</artifactId>
+	<version>1.4.1.RELEASE</version>
+</dependency>
+		
 		
 		<dependency>  
 		    <groupId>org.apache.oltu.oauth2</groupId>  

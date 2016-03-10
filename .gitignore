@@ -10,6 +10,6 @@ target/
 .settings/
 .classpath
 .project
-.springBeans/.apt_generated
-/.factorypath
-/.gitignore
+.springBeans
+.apt_generated
+.factorypath
