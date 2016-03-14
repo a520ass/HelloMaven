@@ -4,10 +4,10 @@ public class ThreadDemo3 {
 	
 	public static void main(String[] args) {
 		Ticket1 t =new Ticket1();
-		Thread t1 = new Thread(t,"´°¿ÚÒ»");
-        Thread t2 = new Thread(t,"´°¿Ú¶ş");
-        Thread t3 = new Thread(t,"´°¿ÚÈı");
-        Thread t4 = new Thread(t,"´°¿ÚËÄ");
+		Thread t1 = new Thread(t,"çª—å£ä¸€");
+        Thread t2 = new Thread(t,"çª—å£äºŒ");
+        Thread t3 = new Thread(t,"çª—å£ä¸‰");
+        Thread t4 = new Thread(t,"çª—å£å››");
         t1.start();
         t2.start();
         t3.start();
