@@ -29,12 +29,34 @@
 		});
 		
 		//$(".media").media({width:1366, height:400});
+		
+		var setting = {data:{simpleData:{enable:true,idKey:"id",pIdKey:"pId",rootPId:'0'}},
+				callback:{onClick:function(event, treeId, treeNode){
+						var id = treeNode.id == '0' ? '' :treeNode.id;
+						//$('#officeContent').attr("src","${ctx}/sys/user/list?office.id="+id+"&office.name="+treeNode.name);
+					}
+				}
+			};
+		var data =[
+				{ id:1, pId:0, name:"SO"},
+		         { id:11, pId:1, name:"SO-E1"},
+		         { id:111, pId:11, name:"SO-E1-S1"},
+		         { id:112, pId:11, name:"SO-E1-S2"},
+		         { id:12, pId:1, name:"SO-E11"},
+		         { id:121, pId:12, name:"SO-E11-S11"},
+		         { id:122, pId:12, name:"SO-E11-S22"}
+		      ]
+		//$.getJSON("${ctx}/sys/office/treeData",function(data){
+			$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
+		//});
 	});
 </script>
 </head>
 <body>
 	<h1>这是首页。。。。。。。</h1><a href="${ctx}/sys/logout">退出</a><br>
-	<a class="media" href="http://hftest.oss-cn-beijing.aliyuncs.com/upload/file/20151127/1448602013595027188.pdf">pdf</a>
+	<a class="media" href="http://hftest.oss-cn-beijing.aliyuncs.com/upload/file/20151127/1448602013595027188.pdf">pdf</a><br>
+	
+	<div id="ztree" class="ztree"></div>
 	<a href="test/i18n?locale=en_US">英文</a>&nbsp;
 	<a href="test/i18n?locale=zh_CH">中文</a>
 	<br>
