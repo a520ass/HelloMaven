@@ -1,11 +1,15 @@
 package com.hf.spring.jpa.web;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -23,15 +27,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.aliyun.webupload.WebUploadUtils;
 import com.hf.spring.jpa.common.mapper.JsonMapper;
+import com.hf.spring.jpa.entity.Employee;
+import com.hf.spring.jpa.entity.User;
 import com.hf.spring.jpa.service.DepartmentService;
 import com.hf.spring.jpa.service.EmployeeService;
 import com.hf.spring.jpa.service.UserService;
@@ -40,7 +48,8 @@ import com.hf.spring.jpa.service.UserService;
 @RequestMapping(value="/test")
 @Controller
 public class TestController {
-	Logger log=LoggerFactory.getLogger(getClass());
+	private final Logger log=LoggerFactory.getLogger(getClass());
+	private static final int BUFFER_SIZE = 100 * 1024;
 	@Autowired
 	private DepartmentService departmentService;
 	@Autowired
@@ -75,6 +84,14 @@ public class TestController {
 		return "success";
 	}
 	
+	@RequestMapping("/testfreemarker")
+	public String testfreemarker(HttpServletRequest request,Model model){
+		String contextPath = request.getContextPath()+"/static";
+		model.addAttribute("ctxStatic", contextPath);
+		model.addAttribute("username", "何锋");
+		return "f1";
+	}
+	
 	
 	@RequestMapping(value="/testupload",method=RequestMethod.GET)
 	public String testOssWebUpload(HttpServletRequest request,
@@ -82,7 +99,92 @@ public class TestController {
 		return "ossupload";
 	}
 	
-	@RequestMapping("downloadfile")
+	@ResponseBody
+	@RequestMapping(value="/osswebupload",method=RequestMethod.GET)
+	public Map<String,String> ossWebUpload(HttpServletRequest request,
+			HttpServletResponse response) throws IOException{
+		Map<String,String> postpolicy=WebUploadUtils.getPostPolicy();
+		postpolicy.put("dir", "user/1.2/3.4.5.");
+		//user/不变，后面加参数。构造成最终上传上去的路径及文件名
+		return postpolicy;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/testplupload",method=RequestMethod.POST)	
+	public String plupload(@RequestParam MultipartFile file, HttpServletRequest request, HttpSession session) {
+		try {
+			String name = request.getParameter("name");
+			Integer chunk = 0, chunks = 0;
+			if(null != request.getParameter("chunk") && !request.getParameter("chunk").equals("")){
+				chunk = Integer.valueOf(request.getParameter("chunk"));
+			}
+			if(null != request.getParameter("chunks") && !request.getParameter("chunks").equals("")){
+				chunks = Integer.valueOf(request.getParameter("chunks"));
+			}
+			log.info("chunk:[" + chunk + "] chunks:[" + chunks + "]");
+			//检查文件目录，不存在则创建
+			String relativePath = "/plupload/files/";
+			String realPath = session.getServletContext().getRealPath("");
+			File folder = new File(realPath + relativePath);
+			if (!folder.exists()) {
+				folder.mkdirs();
+			}
+			
+			//目标文件 
+			File destFile = new File(folder, name);
+			//文件已存在删除旧文件（上传了同名的文件） 
+	        if (chunk == 0 && destFile.exists()) {  
+	        	destFile.delete();  
+	        	destFile = new File(folder, name);
+	        }
+	        //合成文件
+	        appendFile(file.getInputStream(), destFile);  
+	        if (chunk == chunks - 1) {  
+	            log.info("上传完成");
+	        }else {
+	        	log.info("还剩["+(chunks-1-chunk)+"]个块文件");
+	        }
+			
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
+		
+		return "";
+	}
+	
+	private void appendFile(InputStream in, File destFile) {
+		OutputStream out = null;
+		try {
+			// plupload 配置了chunk的时候新上传的文件append到文件末尾
+			if (destFile.exists()) {
+				out = new BufferedOutputStream(new FileOutputStream(destFile, true), BUFFER_SIZE); 
+			} else {
+				out = new BufferedOutputStream(new FileOutputStream(destFile),BUFFER_SIZE);
+			}
+			in = new BufferedInputStream(in, BUFFER_SIZE);
+			
+			int len = 0;
+			byte[] buffer = new byte[BUFFER_SIZE];			
+			while ((len = in.read(buffer)) > 0) {
+				out.write(buffer, 0, len);
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		} finally {		
+			try {
+				if (null != in) {
+					in.close();
+				}
+				if(null != out){
+					out.close();
+				}
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
+		}
+	}
+	
+	@RequestMapping("/downloadfile")
 	public void downloadFile(HttpServletRequest request,
 			HttpServletResponse response) {
 		InputStream inputStream = null;
@@ -122,23 +224,15 @@ public class TestController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="/testjson",method=RequestMethod.GET)
-	public String testJson(HttpServletRequest request,
-			HttpServletResponse response) throws IOException{
-		/*response.setContentType("text/html;charset=utf-8");
-		response.getWriter().print(employeeService.findEmployees());
-		response.getWriter().flush();
-		response.getWriter().close();*/
-		return JsonMapper.toJsonString(employeeService.findEmployees());
+	@RequestMapping(value="/testjson",method=RequestMethod.POST)
+	public List<Employee> testJson(@RequestBody List<User> user, HttpServletRequest request,
+			HttpServletResponse response){
+		log.warn(user.toString());
+		List<Employee> employees = employeeService.findEmployees();
+		return employees;
 	}
 	
-	@ResponseBody
-	@RequestMapping(value="/osswebupload",method=RequestMethod.GET)
-	public String ossWebUpload(HttpServletRequest request,
-			HttpServletResponse response) throws IOException{
-		Map<String,String> postpolicy=WebUploadUtils.getPostPolicy();
-		return JsonMapper.toJsonString(postpolicy);
-	}
+	
 	
 	@ResponseBody
 	@RequestMapping(value="/testStringJson",method=RequestMethod.POST)

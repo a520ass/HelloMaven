@@ -10,13 +10,19 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#testjson").click(function(){
+			var saveDataAry=[];  
+	        var data1={"id":1,"username":"test","password":"gz"};  
+	        var data2={"id":2,"username":"何锋","password":"gr"};  
+	        saveDataAry.push(data1);  
+	        saveDataAry.push(data2); 
 			$.ajax({
                 url: "${ctx}/test/testjson",
-                type: "get",  
-                contentType: "application/json;charset=utf-8",//设置内容的类型
-                dataType: "text",//设置data的类型
+                type: "POST",  
+                contentType: "application/json",//发送数据到服务器时所使用的内容类型。默认是："application/x-www-form-urlencoded"。
+                dataType: "json",//预期的服务器响应的数据类型（返回的data？）
+                data:JSON.stringify(saveDataAry),
                 success: function(data) {
-                    alert(data);
+                    console.log(data);
                 },
                 error: function() {
                     alert("系统发生异常，请稍候再试！\n\n有任何疑问，请联系系统管理员！");
@@ -49,6 +55,48 @@
 		//$.getJSON("${ctx}/sys/office/treeData",function(data){
 			$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
 		//});
+		
+		var uploader = new plupload.Uploader({
+			runtimes : 'html5,flash,silverlight,html4',
+			browse_button : 'pickfiles', // you can pass in id...
+			container: document.getElementById('container'), // ... or DOM Element itself
+			url : '${ctx}/test/testplupload',
+			flash_swf_url : '${ctxStatic}/oss-h5-upload-js-v2/lib/plupload-2.1.2/js/Moxie.swf',
+			silverlight_xap_url : '${ctxStatic}/oss-h5-upload-js-v2/lib/plupload-2.1.2/js/Moxie.xap',
+			
+			max_file_size : '30mb',
+			chunk_size : '10mb',
+			multipart_params: {
+				  "one": '1',
+				  "tr2":"何锋"
+			},
+
+			init: {
+				PostInit: function() {
+					document.getElementById('filelist').innerHTML = '';
+
+					document.getElementById('uploadfiles').onclick = function() {
+						uploader.start();
+						return false;
+					};
+				},
+
+				FilesAdded: function(up, files) {
+					plupload.each(files, function(file) {
+						document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+					});
+				},
+
+				UploadProgress: function(up, file) {
+					document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+				},
+
+				Error: function(up, err) {
+					document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+				}
+			}
+		});
+		uploader.init();
 	});
 </script>
 </head>
@@ -57,6 +105,16 @@
 	<a class="media" href="http://hftest.oss-cn-beijing.aliyuncs.com/upload/file/20151127/1448602013595027188.pdf">pdf</a><br>
 	
 	<div id="ztree" class="ztree"></div>
+	
+	<div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+	<br />
+	<div id="container">
+	    <a id="pickfiles" href="javascript:;">[Select files]</a> 
+	    <a id="uploadfiles" href="javascript:;">[Upload files]</a>
+	</div>
+	<br />
+	<pre id="console"></pre>
+	
 	<a href="test/i18n?locale=en_US">英文</a>&nbsp;
 	<a href="test/i18n?locale=zh_CH">中文</a>
 	<br>
@@ -70,7 +128,7 @@
 	<br>
 	<a href="test/testResponseEntity">testResponseEntity</a>
 	<br>
-	<shiro:hasPermission name="sys:view">
+	<shiro:hasPermission name="sys:insert">
 	<form action="test/testHttpMessageConverter" method="post" enctype="multipart/form-data">
 		File:<input type="file" name="file">
 		Desc:<input type="text" name="desc">

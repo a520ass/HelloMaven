@@ -25,9 +25,13 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Table(name="JPA_EMPLOYEES")	//雇员
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Employee implements Serializable{
 	
 	/**
@@ -89,12 +93,10 @@ public class Employee implements Serializable{
 		this.createTime = createTime;
 	}
 	
-	/**
-	 * 懒加载LAZY Department
-	 * @return
-	 */
+	
 	@JoinColumn(name="DEPARTMENT_ID")
 	@ManyToOne(fetch=FetchType.LAZY,cascade={CascadeType.MERGE})
+	@JsonIgnore
 	public Department getDepartment() {
 		return department;
 	}

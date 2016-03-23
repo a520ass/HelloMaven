@@ -33,7 +33,6 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
 	@Override
 	public List<Department> findDepartments() {
-		// TODO Auto-generated method stub
 		return this.em.createQuery("from Department").getResultList();
 	}
 

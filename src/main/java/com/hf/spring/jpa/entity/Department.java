@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +25,7 @@ public class Department implements Serializable{
 	private static final long serialVersionUID = -3496147272059842649L;
 	private Integer id;
 	private String departmentName;
-	//private Set<Employee> employees=new HashSet<>();
+	private Set<Employee> employees=new HashSet<>();
 	
 	//allocationSize默认为50  生成主键为PK_VALUE乘于allocationSize（PK_VALUE值是按1递增的，先乘allocationSize后，
 	//数据表再递增，递增后显示是PK_VALUE+1）
@@ -49,14 +50,14 @@ public class Department implements Serializable{
 		this.departmentName = departmentName;
 	}
 	
-	/*@JoinColumn(name="DEPARTMENT_ID")
-	@OneToMany(cascade={CascadeType.PERSIST})
+	//@JoinColumn(name="DEPARTMENT_ID")
+	@OneToMany(fetch=FetchType.LAZY,cascade={CascadeType.MERGE},mappedBy="department")
 	public Set<Employee> getEmployees() {
 		return employees;
 	}
 	public void setEmployees(Set<Employee> employees) {
 		this.employees = employees;
-	}*/
+	}
 	public Department(Integer id, String departmentName) {
 		super();
 		this.id = id;
@@ -64,10 +65,5 @@ public class Department implements Serializable{
 	}
 	public Department() {
 		super();
-	}
-	@Override
-	public String toString() {
-		return "Department [id=" + id + ", departmentName=" + departmentName
-				+ "]";
 	}
 }

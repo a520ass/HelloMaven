@@ -1,35 +1,15 @@
-<!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership.  The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in compliance
-  ~ with the License.  You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing,
-  ~ software distributed under the License is distributed on an
-  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied.  See the License for the
-  ~ specific language governing permissions and limitations
-  ~ under the License.
-  -->
-
-<!-- EhCache XML configuration file used for Shiro spring sample application -->
 <ehcache>
 
     <!-- Sets the path to the directory where cache .data files are created.
 
-If the path is a Java System Property it is replaced by
-its value in the running VM.
-
-The following properties are translated:
-user.home - User's home directory
-user.dir - User's current working directory
-java.io.tmpdir - Default temp file path -->
-    <diskStore path="java.io.tmpdir/shiro-spring-sample"/>
+	If the path is a Java System Property it is replaced by
+	its value in the running VM.
+	
+	The following properties are translated:
+	user.home - User's home directory
+	user.dir - User's current working directory
+	java.io.tmpdir - Default temp file path -->
+    <diskStore path="java.io.tmpdir"/>
 
 
     <!--Default Cache configuration. These will applied to caches programmatically created through
@@ -70,8 +50,10 @@ java.io.tmpdir - Default temp file path -->
             timeToIdleSeconds="120"
             timeToLiveSeconds="120"
             overflowToDisk="false"
-            diskPersistent="false"
+            maxElementsOnDisk="10000000"
+            diskPersistent="true"
             diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
             />
 
     <!-- We want eternal="true" (with no timeToIdle or timeToLive settings) because Shiro manages session
@@ -105,13 +87,13 @@ even after a JVM restart.  -->
            timeToLiveSeconds="120"
            overflowToDisk="true" />  
      
-	    <!--
-	    java文件注解查找cache方法名的策略：如果不指定java文件注解中的region="ehcache.xml中的name的属性值", 
-	    则使用name名为com.lysoft.bean.user.User的cache(即类的全路径名称), 如果不存在与类名匹配的cache名称, 则用 defaultCache
-	    如果User包含set集合, 则需要另行指定其cache
-	    例如User包含citySet集合, 则也需要
-	    添加配置到ehcache.xml中
-	    -->   
+	    
+   <!-- java文件注解查找cache方法名的策略：如果不指定java文件注解中的region="ehcache.xml中的name的属性值", 
+    则使用name名为com.lysoft.bean.user.User的cache(即类的全路径名称), 如果不存在与类名匹配的cache名称, 则用 defaultCache
+    如果User包含set集合, 则需要另行指定其cache
+    例如User包含citySet集合, 则也需要
+    添加配置到ehcache.xml中--> 
+	      
     <cache name="javaClassName"
 		   maxElementsInMemory="2000"
 		   eternal="false"
