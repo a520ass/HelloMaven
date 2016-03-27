@@ -1,5 +1,6 @@
 package com.hf.aop;
 
+
 public class GreetingImpl implements Greeting {
 	 
     @Override

@@ -14,13 +14,17 @@
 		<p>First name: <span data-bind="text: firstName"></span></p>
 		<p>Last name: <span data-bind="text: lastName"></span></p>
 		<h2>Hello, <input data-bind="value: fullName"/>!</h2>
+		
+		<p>Enter bid price: <input data-bind="value: formattedPrice"/></p>
 	</body>
 	<script>
 		var myViewModel = {
 		    personName: ko.observable('Bob'),
     		personAge: ko.observable(123),
     		firstName:ko.observable("he"),
-    		lastName:ko.observable("feng")
+    		lastName:ko.observable("feng"),
+    		price:ko.observable(1.1)
+    		
 		};
 		/*
 		myViewModel.fullName = ko.dependentObservable(function () {
@@ -40,6 +44,20 @@
 		    owner: myViewModel
 			
 		});
+		
+		myViewModel.formattedPrice = ko.dependentObservable({
+
+            read: function () {
+                return "$" + this.price().toFixed(2);
+            },
+        
+            write: function (value) {
+                // Strip out unwanted characters, parse as float, then write the raw data back to the underlying "price" observable
+                value = parseFloat(value.replace(/[^\.\d]/g, ""));
+                this.price(isNaN(value) ? 0 : value); // Write to underlying storage
+            },
+            owner: myViewModel
+        });
 		ko.applyBindings(myViewModel);
 	</script>
 </html>

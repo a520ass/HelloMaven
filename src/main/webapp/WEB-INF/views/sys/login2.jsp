@@ -100,8 +100,14 @@ label.error {
 	$(document).ready(function() {
 		var options = {
 			success : function(data) {
-				//$("#responseText").text("异步登陆成功");
-				window.location.reload();
+				console.log("异步登陆成功");
+				$("#responseText").text("异步登陆成功,跳转中。。。");
+				if(data){
+					window.location.reload();
+				}else{
+					console.log("登陆失败");
+				}
+				
 			}
 		};
 		$("#loginForm").ajaxForm(options);

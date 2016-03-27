@@ -2,13 +2,12 @@ package com.hf.aop.component;
 
 import org.springframework.stereotype.Component;
 
-import com.hf.aop.Greeting;
-
 @Component
 public class GreetingImpl implements Greeting {
 	 
     @Override
     public void sayHello(String name) {
         System.out.println("Hello! " + name);
+        throw new RuntimeException("Error");
     }
 }

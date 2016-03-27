@@ -21,12 +21,12 @@
     <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <!-- Set a net.sf.ehcache.CacheManager instance here if you already have one.  If not, a new one
              will be creaed with a default config:-->
-        <!-- 直接引用spring中的cacheManager -->     
-    	<property name="cacheManager" ref="cacheManager"/> 
+        <!-- 直接引用spring中的cacheManager      
+    	<property name="cacheManager" ref="cacheManager"/> -->
         <!-- If you don't have a pre-built net.sf.ehcache.CacheManager instance to inject, but you want
              a specific Ehcache configuration to be used, specify that here.  If you don't, a default
-             will be used.:
-        <property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache.xml"/> -->
+             will be used.:-->
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/> 
     </bean>
     
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->

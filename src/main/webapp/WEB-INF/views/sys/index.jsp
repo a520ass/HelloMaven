@@ -53,7 +53,7 @@
 		         { id:122, pId:12, name:"SO-E11-S22"}
 		      ]
 		//$.getJSON("${ctx}/sys/office/treeData",function(data){
-			$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
+			//$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
 		//});
 		
 		var uploader = new plupload.Uploader({
@@ -64,8 +64,8 @@
 			flash_swf_url : '${ctxStatic}/oss-h5-upload-js-v2/lib/plupload-2.1.2/js/Moxie.swf',
 			silverlight_xap_url : '${ctxStatic}/oss-h5-upload-js-v2/lib/plupload-2.1.2/js/Moxie.xap',
 			
-			max_file_size : '30mb',
-			chunk_size : '10mb',
+			max_file_size : '1024mb',
+			chunk_size : '9mb',
 			multipart_params: {
 				  "one": '1',
 				  "tr2":"何锋"
@@ -113,7 +113,7 @@
 	    <a id="uploadfiles" href="javascript:;">[Upload files]</a>
 	</div>
 	<br />
-	<pre id="console"></pre>
+	<div id="console"></div>
 	
 	<a href="test/i18n?locale=en_US">英文</a>&nbsp;
 	<a href="test/i18n?locale=zh_CH">中文</a>
@@ -128,7 +128,7 @@
 	<br>
 	<a href="test/testResponseEntity">testResponseEntity</a>
 	<br>
-	<shiro:hasPermission name="sys:insert">
+	<shiro:hasPermission name="sys:view">
 	<form action="test/testHttpMessageConverter" method="post" enctype="multipart/form-data">
 		File:<input type="file" name="file">
 		Desc:<input type="text" name="desc">

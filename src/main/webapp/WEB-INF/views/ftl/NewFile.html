@@ -4,7 +4,19 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script data-main="../../../static/main" src="../../../static/requirejs/require.js"></script>
 <body>
-	
+我的天
 </body>
+<script type="text/javascript">
+	/*require(["a"],function($){
+		
+		console.log("成功");
+	});*/
+	require.config(["jquery", "jquery.form"],function($){
+		$(function(){
+			$("").ajaxSubmit({});
+		})
+	})
+</script>
 </html>

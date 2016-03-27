@@ -38,16 +38,16 @@ public class ConTest {
 		EmployeeService employeeService=ctx.getBean(EmployeeService.class);
 		DepartmentService departmentService=ctx.getBean(DepartmentService.class);
 		Department department=new Department();
-		department.setDepartmentName("Éú²ú²¿");
-		Employee employee1=new Employee(2, "ºÎ·æ1", "123@123.com", new Date(), new Date(), department);
-		Employee employee2=new Employee(3, "ºÎ·æ2", "123@123.com", new Date(), new Date(), department);
+		department.setDepartmentName("ï¿½ï¿½ï¿½");
+		Employee employee1=new Employee(2, "ï¿½Î·ï¿½1", "123@123.com", new Date(), new Date(), department);
+		Employee employee2=new Employee(3, "ï¿½Î·ï¿½2", "123@123.com", new Date(), new Date(), department);
 		
 		employeeService.saveEmployee(employee1);
 		employeeService.saveEmployee(employee2);
-		departmentService.saveDepartment(department);//½¨ÒéÏÈ±£´æ1µÄÒ»¶Ë
+		departmentService.saveDepartment(department);//ï¿½ï¿½ï¿½ï¿½ï¿½È±ï¿½ï¿½ï¿½1ï¿½ï¿½Ò»ï¿½ï¿½
 	}
 	*//**
-	 * left outer join 1µÄÒ»¶Ë
+	 * left outer join 1ï¿½ï¿½Ò»ï¿½ï¿½
 	 *//*
 	@Test
 	public void test1(){
@@ -58,14 +58,14 @@ public class ConTest {
 		System.out.println(employee.getDepartment().getDepartmentName());
 	}*/
 	/**
-	 * µ¥ÏòÒ»¶Ô¶à
+	 * ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ô¶ï¿½
 	 */
 	/*@Test
 	public void test2(){
 		EmployeeService employeeService=ctx.getBean(EmployeeService.class);
 		DepartmentService departmentService=ctx.getBean(DepartmentService.class);
-		Employee employee1=new Employee("ºÎ·æ1", "123@123.com", new Date(), new Date());
-		Employee employee2=new Employee("ºÎ·æ2", "123@123.com", new Date(), new Date());
+		Employee employee1=new Employee("ï¿½Î·ï¿½1", "123@123.com", new Date(), new Date());
+		Employee employee2=new Employee("ï¿½Î·ï¿½2", "123@123.com", new Date(), new Date());
 		Set<Employee> employees = new HashSet<>();
 		employees.add(employee1);
 		employees.add(employee2);
@@ -80,10 +80,10 @@ public class ConTest {
 	@Test
 	public void testDataSource(){
 		UserService userService=ctx.getBean(UserService.class);
-		//¶þ¼¶¼¶»º´æ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		System.out.println(userService.findUserById(1));
 		System.out.println(userService.findUserById(1));
-		//²éÑ¯»º´æ
+		//ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½
 		System.out.println(userService.findUserByUsername("superadmin"));
 		System.out.println(userService.findUserByUsername("superadmin"));
 	}

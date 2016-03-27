@@ -85,7 +85,7 @@ public class DepartmentController {
 		log.info(request.getRequestURI());
 		if(result.getErrorCount()>0){
 			for(FieldError error:result.getFieldErrors()){
-				log.info(error.getField()+":"+error.getDefaultMessage());
+				log.error(error.getField()+":"+error.getDefaultMessage());
 			}
 			map.put("departments", departmentService.findDepartments());
 			return "input";

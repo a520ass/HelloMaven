@@ -21,29 +21,29 @@ public class Client {
 	
 	@Test
 	public void testAop() {
-        ProxyFactory proxyFactory = new ProxyFactory();     // ´´½¨´úÀí¹¤³§
-        proxyFactory.setTarget(new GreetingImpl());         // ÉäÈëÄ¿±êÀà¶ÔÏó
-        proxyFactory.addAdvice(new GreetingBeforeAdvice()); // Ìí¼ÓÇ°ÖÃÔöÇ¿
-        proxyFactory.addAdvice(new GreetingAfterAdvice());  // Ìí¼ÓºóÖÃÔöÇ¿ 
+        ProxyFactory proxyFactory = new ProxyFactory();     // åˆ›å»ºä»£ç†å·¥å‚
+        proxyFactory.setTarget(new GreetingImpl());         // å°„å…¥ç›®æ ‡ç±»å¯¹è±¡
+        proxyFactory.addAdvice(new GreetingBeforeAdvice()); // æ·»åŠ å‰ç½®å¢å¼º
+        proxyFactory.addAdvice(new GreetingAfterAdvice());  // æ·»åŠ åç½®å¢å¼º 
  
-        Greeting greeting = (Greeting) proxyFactory.getProxy(); // ´Ó´úÀí¹¤³§ÖĞ»ñÈ¡´úÀí
-        greeting.sayHello("testAop");                              // µ÷ÓÃ´úÀíµÄ·½·¨
+        Greeting greeting = (Greeting) proxyFactory.getProxy(); // ä»ä»£ç†å·¥å‚ä¸­è·å–ä»£ç†
+        greeting.sayHello("testAop");                              //  è°ƒç”¨ä»£ç†çš„æ–¹æ³•
     }
 	
 	@Test
 	public void testAop2() {
-        ProxyFactory proxyFactory = new ProxyFactory();     // ´´½¨´úÀí¹¤³§
-        proxyFactory.setTarget(new GreetingImpl());         // ÉäÈëÄ¿±êÀà¶ÔÏó
-        proxyFactory.addAdvice(new GreetingBeforeAndAfterAdvice()); // Ìí¼ÓÔöÇ¿
+        ProxyFactory proxyFactory = new ProxyFactory();     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½
+        proxyFactory.setTarget(new GreetingImpl());         // ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        proxyFactory.addAdvice(new GreetingBeforeAndAfterAdvice()); // ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿
  
-        Greeting greeting = (Greeting) proxyFactory.getProxy(); // ´Ó´úÀí¹¤³§ÖĞ»ñÈ¡´úÀí
-        greeting.sayHello("testAop");                              // µ÷ÓÃ´úÀíµÄ·½·¨
+        Greeting greeting = (Greeting) proxyFactory.getProxy(); // ï¿½Ó´ï¿½ï¿½?ï¿½ï¿½ï¿½Ğ»ï¿½È¡ï¿½ï¿½ï¿½ï¿½
+        greeting.sayHello("testAop");                              // ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½
     }
 	
 	@Test
 	public void testAop4() {
-		ApplicationContext context = new ClassPathXmlApplicationContext("spring-context-aoptest.xml"); // »ñÈ¡ Spring Context
-        com.hf.aop.component.Greeting greeting = (com.hf.aop.component.Greeting) context.getBean("greetingProxy");                        // ´Ó Context ÖĞ¸ù¾İ id »ñÈ¡ Bean ¶ÔÏó£¨ÆäÊµ¾ÍÊÇÒ»¸ö´úÀí£©
-        greeting.sayHello("Jack");                             // µ÷ÓÃ´úÀíµÄ·½·¨
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-context-aoptest.xml"); // è·å– Spring Context
+        com.hf.aop.component.Greeting greeting = (com.hf.aop.component.Greeting) context.getBean("greetingProxy");//  ä» Context ä¸­æ ¹æ® id è·å– Bean å¯¹è±¡ï¼ˆå…¶å®å°±æ˜¯ä¸€ä¸ªä»£ç†ï¼‰
+        greeting.sayHello("Jack");                             // è°ƒç”¨ä»£ç†çš„æ–¹æ³•
     }
 }
