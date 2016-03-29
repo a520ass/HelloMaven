@@ -4,3 +4,4 @@ define(function(){
   }
   fun1();
 });
+//此为定义一个模块

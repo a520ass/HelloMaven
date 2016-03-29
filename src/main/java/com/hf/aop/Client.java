@@ -5,6 +5,8 @@ import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.hf.aop.component.Apology;
+
 public class Client {
 	
 	@Test
@@ -45,5 +47,15 @@ public class Client {
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring-context-aoptest.xml"); // 获取 Spring Context
         com.hf.aop.component.Greeting greeting = (com.hf.aop.component.Greeting) context.getBean("greetingProxy");//  从 Context 中根据 id 获取 Bean 对象（其实就是一个代理）
         greeting.sayHello("Jack");                             // 调用代理的方法
+    }
+	
+	@Test
+	public void testAop5() {
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-context-aoptest.xml"); // 获取 Spring Context
+		com.hf.aop.component.GreetingImpl greetingImpl = (com.hf.aop.component.GreetingImpl) context.getBean("greetingProxy"); // 注意：转型为目标类，而并非它的 Greeting 接口
+        greetingImpl.sayHello("Jack");
+ 
+        Apology apology = (Apology) greetingImpl; // 将目标类强制向上转型为 Apology 接口（这是引入增强给我们带来的特性，也就是“接口动态实现”功能）
+        apology.saySorry("Jack");
     }
 }

@@ -11,7 +11,7 @@
 		<java-version>1.7</java-version>
 		<org.springframework-version>4.0.8.RELEASE</org.springframework-version>
 		<org.springframework.security-version>4.0.1.RELEASE</org.springframework.security-version>
-		<org.aspectj-version>1.8.1</org.aspectj-version>
+		<org.aspectj-version>1.8.6</org.aspectj-version>
 		<org.slf4j-version>1.7.12</org.slf4j-version>
 		<mybatis-version>3.2.8</mybatis-version>
 		<mybatis-org.springframework-version>1.2.2</mybatis-org.springframework-version>
@@ -20,7 +20,6 @@
 		<jackson.version>2.6.1</jackson.version>
 		<shiro.version>1.2.3</shiro.version>
 		<jetty.version>8.1.16.v20140903</jetty.version>
-		<springside.version>4.3.0-RELEASE</springside.version>
 		<commons-lang3.version>3.3.2</commons-lang3.version>
 		<commons-io.version>2.4</commons-io.version>
 		<commons-codec.version>1.9</commons-codec.version>
@@ -33,7 +32,6 @@
 	<dependencies>
 	
 		<!-- hibernate -->
-		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
