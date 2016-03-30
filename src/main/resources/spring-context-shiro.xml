@@ -12,22 +12,55 @@
 	
 	<!-- 定义Shiro安全管理配置 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-		<property name="cacheManager" ref="shiroEhcacheManager" />
+		<property name="cacheManager" ref="redisCacheManager" />
+		<property name="sessionManager" ref="sessionManager"></property>
 		<!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
 		<property name="realm" ref="systemAuthorizingRealm" />
 	</bean>
 	
-	<!-- 定义shiro缓存管理器 -->
-    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <!-- Set a net.sf.ehcache.CacheManager instance here if you already have one.  If not, a new one
-             will be creaed with a default config:-->
-        <!-- 直接引用spring中的cacheManager      
-    	<property name="cacheManager" ref="cacheManager"/> -->
-        <!-- If you don't have a pre-built net.sf.ehcache.CacheManager instance to inject, but you want
-             a specific Ehcache configuration to be used, specify that here.  If you don't, a default
-             will be used.:-->
-        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/> 
+	<!-- 会话管理配置 -->
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="sessionDAO" ref="redisShiroSessionDAO"></property>
+		<!-- 会话超时时间，单位：毫秒  -->
+		<property name="globalSessionTimeout" value="1800000"></property>
+		
+		<!-- 定时清理失效会话, 清理用户直接关闭浏览器造成的孤立会话   -->
+		<property name="sessionValidationInterval" value="120000"/>
+ 		<property name="sessionValidationSchedulerEnabled" value="true"/>
+		
+		<property name="sessionIdCookie" ref="sessionIdCookie"/>
+		<property name="sessionIdCookieEnabled" value="true"/>
+	</bean>
+	
+	<!-- 指定本系统SESSIONID, 默认为: JSESSIONID 问题: 与SERVLET容器名冲突, 如JETTY, TOMCAT 等默认JSESSIONID,
+		当跳出SHIRO SERVLET时如ERROR-PAGE容器会为JSESSIONID重新分配值导致登录会话丢失! -->
+	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg name="name" value="SHAREJSESSIONID"/>
+	</bean>
+	
+	<bean id="redisManager" class="com.hf.spring.jpa.common.security.shiro.session.RedisManager"></bean>
+	<!-- 自定义redisManager-redis -->  
+    <bean id="redisCacheManager" class="com.hf.spring.jpa.common.security.shiro.session.RedisCacheManager">  
+        <property name="redisManager" ref="redisManager" />
     </bean>
+    <!-- 自定义cacheManager -->  
+    <bean id="redisCache" class="com.hf.spring.jpa.common.security.shiro.session.RedisCache">  
+        <constructor-arg ref="redisManager"></constructor-arg>  
+    </bean> 
+	 <!-- session会话存储的实现类 -->
+    <bean id="redisShiroSessionDAO" class="com.hf.spring.jpa.common.security.shiro.session.RedisSessionDAO">  
+        <property name="redisManager" ref="redisManager" />  
+    </bean> 
+    
+	<!-- 自定义Session存储容器 -->
+	<!-- 设置Session缓存名字，默认就是shiro-activeSessionCache
+	<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+		<property name="activeSessionsCacheName" value="shiro-activeSessionCache"></property>
+	</bean>-->
+	<!-- 定义授权缓存管理器 
+    <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/> 
+    </bean>-->
     
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
@@ -40,7 +73,7 @@
     	<property name="securityManager" ref="securityManager"/>
 	</bean>		
 
-<!-- Shiro权限过滤过滤器定义 -->
+	<!-- Shiro权限过滤过滤器定义 -->
 	<bean name="shiroFilterChainDefinitions" class="java.lang.String">
 		<constructor-arg>
 			<value>

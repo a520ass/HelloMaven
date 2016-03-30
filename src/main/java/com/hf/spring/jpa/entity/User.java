@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 @Table(name="JPA_USERS")
 @Entity
+//@Cacheable
 public class User implements Serializable{
 	
 	/**

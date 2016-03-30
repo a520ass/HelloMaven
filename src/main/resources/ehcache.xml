@@ -9,7 +9,7 @@
 	user.home - User's home directory
 	user.dir - User's current working directory
 	java.io.tmpdir - Default temp file path -->
-    <diskStore path="java.io.tmpdir"/>
+    <diskStore path="user.dir"/>
 
 
     <!--Default Cache configuration. These will applied to caches programmatically created through
@@ -64,41 +64,33 @@ Answer - ehcache expired it due to the timeToIdle property set to 120 seconds.)
 
 diskPersistent=true since we want an enterprise session management feature - ability to use sessions after
 even after a JVM restart.  -->
-    <cache name="shiro-activeSessionCache"
-           maxElementsInMemory="10000"
-           eternal="true"
-           overflowToDisk="true"
-           diskPersistent="true"
-           diskExpiryThreadIntervalSeconds="600"/>
-
-    <cache name="org.apache.shiro.realm.SimpleAccountRealm.authorization"
-           maxElementsInMemory="100"
-           eternal="false"
-           timeToLiveSeconds="600"
-           overflowToDisk="false"/>
-           
-    <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
-           maxElementsInMemory="5000"
-           eternal="true"
-           overflowToDisk="true" />
-    <cache name="org.hibernate.cache.internal.StandardQueryCache"
-           maxElementsInMemory="10000"
-           eternal="false"
-           timeToLiveSeconds="120"
-           overflowToDisk="true" />  
-     
 	    
    <!-- java文件注解查找cache方法名的策略：如果不指定java文件注解中的region="ehcache.xml中的name的属性值", 
     则使用name名为com.lysoft.bean.user.User的cache(即类的全路径名称), 如果不存在与类名匹配的cache名称, 则用 defaultCache
     如果User包含set集合, 则需要另行指定其cache
     例如User包含citySet集合, 则也需要
     添加配置到ehcache.xml中--> 
+    <!--
+　　　　1、timeToLiveSeconds的定义是：以创建时间为基准开始计算的超时时长；
+　　　　2、timeToIdleSeconds的定义是：在创建时间和最近访问时间中取出离现在最近的时间作为基准计算的超时时长；
+　　　　3、如果仅设置了timeToLiveSeconds，则该对象的超时时间=创建时间+timeToLiveSeconds，假设为A；
+　　　　4、如果没设置timeToLiveSeconds，则该对象的超时时间=max(创建时间，最近访问时间)+timeToIdleSeconds，假设为B；
+　　　　5、如果两者都设置了，则取出A、B最少的值，即min(A,B)，表示只要有一个超时成立即算超时。
+
+　　-->
 	      
-    <cache name="javaClassName"
+    <cache name="org.hibernate.cache.internal.StandardQueryCache"
 		   maxElementsInMemory="2000"
 		   eternal="false"
            timeToIdleSeconds="120"
            timeToLiveSeconds="120"
-           overflowToDisk="true" />  
+           overflowToDisk="true" />
+           
+    <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+		   maxElementsInMemory="2000"
+		   eternal="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="120"
+           overflowToDisk="true" />
 
 </ehcache>

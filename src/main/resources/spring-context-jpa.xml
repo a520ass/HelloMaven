@@ -50,10 +50,12 @@
        			<prop key="hibernate.show_sql">true</prop>
         		<prop key="hibernate.hbm2ddl.auto">update</prop>
         		
-        		<!-- 开启二级缓存 -->  
-        		<prop key="hibernate.cache.use_second_level_cache">true</prop>
         		<!-- 开启查询缓存 -->
         		<prop key="hibernate.cache.use_query_cache">true</prop>
+        		
+        		<!-- 开启二级缓存 -->  
+        		<prop key="hibernate.cache.use_second_level_cache">true</prop>
+        		<!--  二级缓存缓存的仅仅是对象，如果查询出来的是对象的一些属性，则不会被加到缓存中去-->
         		<!-- 二级缓存区域名的前缀 -->  
 			<!--<prop key="hibernate.cache.region_prefix">h3test</prop>--> 
         		<!-- 高速缓存提供程序 -->  
@@ -62,6 +64,7 @@
         		
 				<!-- 强制Hibernate以更人性化的格式将数据存入二级缓存 -->  
 				<prop key="hibernate.cache.use_structured_entries">true</prop>  
+				
 				<!-- Hibernate将收集有助于性能调节的统计数据 -->  
 				<prop key="hibernate.generate_statistics">true</prop>
 				<!-- 控制是否应该向JDBC元数据来确定某些设置默认值  -->
