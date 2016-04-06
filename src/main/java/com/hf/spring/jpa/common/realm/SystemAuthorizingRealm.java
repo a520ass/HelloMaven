@@ -1,5 +1,7 @@
 package com.hf.spring.jpa.common.realm;
 
+import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -34,7 +36,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm{
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principals) {
-		// TODO Auto-generated method stub
 		SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();
 		Object principal=principals.getPrimaryPrincipal();
 		if("superadmin".equals(principal)){
@@ -54,13 +55,15 @@ public class SystemAuthorizingRealm extends AuthorizingRealm{
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken token) throws AuthenticationException {
-		// TODO Auto-generated method stub
 		User user=userService.findUserByUsername(token.getPrincipal().toString());
-		Object principal=user.getUsername();
+		Object principal=token.getPrincipal();
+		char[] credentials = (char[]) token.getCredentials();
+		//String credentialsString = new String(credentials);
+		String salt=user.getSalt();
 		//认证信息
 		Object hashedCredentials=user.getPassword();//"f95abf3936f71d3f67e1cfb7f33ba238";
 		//设置盐值
-		String source="lovebeibei";
+		String source="Hf++cllove"+principal+new String(credentials)+salt;
 		ByteSource credentialsSalt=new Md5Hash(source);
 		//当前realm的name
 		String realmName=getName();
@@ -83,9 +86,10 @@ public class SystemAuthorizingRealm extends AuthorizingRealm{
 	@Test
 	public void test1(){
 		String algorithmName="MD5";
-		String credentials ="admin";
-		String saltsource="lovebeibei";
-		Object salt=new Md5Hash(saltsource);
+		String username="superadmin";
+		String credentials ="admin";//密码
+		String saltsource=UUID.randomUUID().toString();
+		Object salt=new Md5Hash("Hf++cllove"+username+credentials+saltsource);
 		int hashIterations=1024;
 		Object result=new SimpleHash(algorithmName,credentials, salt, hashIterations);
 		System.out.println(result.toString());

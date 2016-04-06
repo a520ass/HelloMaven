@@ -101,7 +101,7 @@
 </script>
 </head>
 <body>
-	<h1>这是首页。。。。。。。</h1><a href="${ctx}/sys/logout">退出</a><br>
+	<h1>这是首页。。。。。。。</h1><a href="https://localhost:8444/cas-server/logout?service=https://localhost:8443/HelloMaven/sys/logout">退出</a><br>
 	<a class="media" href="http://hftest.oss-cn-beijing.aliyuncs.com/upload/file/20151127/1448602013595027188.pdf">pdf</a><br>
 	
 	<div id="ztree" class="ztree"></div>

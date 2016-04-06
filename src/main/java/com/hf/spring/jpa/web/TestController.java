@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aliyun.webupload.WebUploadUtils;
 import com.hf.spring.jpa.common.mapper.JsonMapper;
+import com.hf.spring.jpa.common.security.shiro.session.RedisCacheManager;
+import com.hf.spring.jpa.common.security.shiro.session.RedisSessionDAO;
 import com.hf.spring.jpa.entity.Employee;
 import com.hf.spring.jpa.entity.User;
 import com.hf.spring.jpa.service.DepartmentService;
@@ -58,6 +63,28 @@ public class TestController {
 	private UserService userService;
 	@Autowired
 	private ResourceBundleMessageSource messageSource;
+	@Autowired
+	private RedisSessionDAO sessionDAO;
+	
+	@Autowired
+	private RedisCacheManager redisCacheManager;
+	
+	@RequestMapping("/listsession")
+	@ResponseBody
+    public Collection<Session> list(Model model) {  
+        Collection<Session> sessions =  sessionDAO.getActiveSessions();  
+        model.addAttribute("sessions", sessions);  
+        model.addAttribute("sesessionCount", sessions.size());  
+        return sessions;  
+    }
+	
+	@RequestMapping("/redis")
+	@ResponseBody
+    public Object redis(Model model) {  
+        Cache<Object, Object> cache = redisCacheManager.getCache("mycache");
+        Object o = cache.put("diycache", "啦啦啦贝贝，45df");
+        return o;  
+    }
 	
 	@RequestMapping("/test")
 	public String test(Map<String,Object> map){

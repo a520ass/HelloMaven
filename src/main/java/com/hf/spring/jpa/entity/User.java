@@ -20,6 +20,7 @@ public class User implements Serializable{
 	private Integer id;
 	private String username;
 	private String password;
+	private String salt;
 	
 	@GeneratedValue
 	@Id
@@ -40,6 +41,12 @@ public class User implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 	public User() {
 		super();

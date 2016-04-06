@@ -21,9 +21,6 @@
 	<!-- 加载配置文件   -->
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:database.properties"/>
 	
-	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}")  方式引用 -->
-    <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>
-	
      <!-- c3p0连接池  hibernate -->
      <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
      	<property name="jdbcUrl" value="${jdbc.url}"></property>
