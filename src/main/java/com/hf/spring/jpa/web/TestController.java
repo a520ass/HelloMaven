@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Date;
@@ -83,7 +84,14 @@ public class TestController {
     public Object redis(Model model) {  
         Cache<Object, Object> cache = redisCacheManager.getCache("mycache");
         Object o = cache.put("diycache", "啦啦啦贝贝，45df");
-        return o;  
+        String string = null;
+        try {
+			byte[] bytes = o.toString().getBytes("UTF-8");
+			string = new String(bytes);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+        return string;  
     }
 	
 	@RequestMapping("/test")
@@ -297,11 +305,15 @@ public class TestController {
 		try {
 			InputStream in=file.getInputStream();
 			FileOutputStream fout=new FileOutputStream("files/"+file.getOriginalFilename());
+			int len = 0;
+			byte[] buffer = new byte[BUFFER_SIZE];			
+			while ((len = in.read(buffer)) != -1) {
+				fout.write(buffer, 0, len);
+			}
 			fout.flush();
 			fout.close();
 			in.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(file.getContentType());

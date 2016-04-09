@@ -7,7 +7,7 @@
 <head>
 <title>首页</title>
 </head>
-<body>
+<body style="overflow-x: hidden">
 	<form id="loginForm" class="form-horizontal" role="form" action="${ctx}/sys/login"
 		method="post">
 		<div class="form-group">
@@ -24,6 +24,18 @@
 	            placeholder="请输入密码">
 	      </div>
 	   </div>
+	   <c:if test="${jcaptchaEbabled}">
+	   
+	   <div class="form-group">
+	      <label for="jcaptchaCode" class="col-sm-2 control-label">验证码</label>
+	      <div class="col-sm-2">
+	         <input type="text" class="form-control" id="jcaptchaCode" name="jcaptchaCode"
+	            placeholder="请输入验证码">
+	            <img class="jcaptcha-btn jcaptcha-img" src="${pageContext.request.contextPath}/jcaptcha.jpg" title="点击更换验证码">  
+	      </div>
+	   </div>
+	   
+		</c:if>  
 	   <div class="form-group">
 	      <div class="col-sm-offset-2 col-sm-2">
 	         <div class="checkbox">
@@ -65,7 +77,12 @@
 				
 			}
 		};
-		$("#loginForm").ajaxForm(options);
+		
+		$(".jcaptcha-btn").click(function() {
+            $(".jcaptcha-img").attr("src", '${pageContext.request.contextPath}/jcaptcha.jpg?'+new Date().getTime());
+        });
+		
+		//$("#loginForm").ajaxForm(options);
 	});
 </script>
 </html>

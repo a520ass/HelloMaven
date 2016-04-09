@@ -43,12 +43,14 @@
 	    <constructor-arg name="name" value="SHAREJSESSIONID"/>
 	</bean>
 	
+	<!-- redis的一些方法和连接池 -->
 	<bean id="redisManager" class="com.hf.spring.jpa.common.security.shiro.session.RedisManager"></bean>
-	<!-- 自定义redisManager-redis -->  
+	
+	<!-- 自定义redisManager-redis 用于获取rediscache (指定名字创建或者 获取)-->  
     <bean id="redisCacheManager" class="com.hf.spring.jpa.common.security.shiro.session.RedisCacheManager">  
         <property name="redisManager" ref="redisManager" />
     </bean>
-    <!-- 自定义cacheManager -->  
+    <!-- 自定义cacheManager 操作cache的方法-->  
     <bean id="redisCache" class="com.hf.spring.jpa.common.security.shiro.session.RedisCache">  
         <constructor-arg ref="redisManager"></constructor-arg>  
     </bean> 
@@ -84,8 +86,9 @@
 			<value>
 				/static/** = anon
 				/userfiles/** = anon
+				/jcaptcha* = anon
 				/cas=cas
-				/sys/login =authc,ssl
+				/sys/login =ssl,jCaptchaValidate,authc
 				/sys/logout =logout
 				/**=user
 			</value>
@@ -105,6 +108,7 @@
             	<entry key="ssl" value-ref="sslFilter"/>
             	<entry key="cas" value-ref="casFilter"/>
             	<entry key="authc" value-ref="formAuthenticationFilter"></entry>
+            	<entry key="jCaptchaValidate" value-ref="jCaptchaValidateFilter"/>
 			</util:map>
 		</property>
 		<property name="filterChainDefinitions">
@@ -112,7 +116,17 @@
 		</property>
 	</bean>
 	
-	<bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+	<bean id="formAuthenticationFilter" class="com.hf.spring.jpa.common.security.filter.MyFormAuthenticationFilter">
+		<property name="usernameParam" value="username"/>  
+	    <property name="passwordParam" value="password"/>  
+	    <property name="rememberMeParam" value="rememberMe"/>  
+	    <property name="failureKeyAttribute" value="shiroLoginFailure"/>
+	</bean>
+	
+	<bean id="jCaptchaValidateFilter" class="com.hf.spring.jpa.common.security.jcaptcha.JCaptchaValidateFilter">  
+	    <property name="jcaptchaEbabled" value="true"/>  
+	    <property name="jcaptchaParam" value="jcaptchaCode"/>  
+	    <property name="failureKeyAttribute" value="shiroLoginFailure"/>  
 	</bean>
 	
 	<bean id="sslFilter" class="org.apache.shiro.web.filter.authz.SslFilter">  
