@@ -2,7 +2,7 @@ package com.hf.Thread;
 
 public class ThreadTest {
 	/**
-	 * 采用实现Runnable、Callable接口的方式创见多线程时，优势是：
+	 *  1、采用实现Runnable、Callable接口的方式创见多线程时，优势是：
 
 		线程类只是实现了Runnable接口或Callable接口，还可以继承其他类。
 
@@ -12,7 +12,7 @@ public class ThreadTest {
 		
 		编程稍微复杂，如果要访问当前线程，则必须使用Thread.currentThread()方法。
 		
-		使用继承Thread类的方式创建多线程时优势是：
+		2、使用继承Thread类的方式创建多线程时优势是：
 		
 		编写简单，如果需要访问当前线程，则无需使用Thread.currentThread()方法，直接使用this即可获得当前线程。
 		
@@ -26,11 +26,12 @@ public class ThreadTest {
 		d.setName("demoThead");
 		d.start();
 		 for(int i=0;i<60;i++){
-             System.out.println(Thread.currentThread().getName()+i);
+             System.out.println("main..."+Thread.currentThread().getName()+i);
              if(i==10){
             	 try {
 					d.join();
-					//如果thread1对象使用代码thread2.join(1000),那么线程thread1暂停运行，直到 以下其中一个条件发生：
+					//如果thread1对象使用代码thread2.join(1000),那么线程thread1暂停运行，(这里就是。main线程中。demo线程join)
+					//直到 以下其中一个条件发生：
 					//Thread2结束运行
 					//1000毫秒过去了
 				} catch (InterruptedException e) {

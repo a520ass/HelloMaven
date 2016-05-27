@@ -7,6 +7,8 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.junit.Test;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.redis.connection.jredis.JredisConnectionFactory;
@@ -92,6 +94,11 @@ public class ConTest {
 	public void testRedis(){
 		RedisTemplate redisTemplate=ctx.getBean(RedisTemplate.class);
 		redisTemplate.opsForList().leftPush("redis123", "123");
+	}
+	
+	@Test
+	public void testEhcache(){
+		EhCacheCacheManager bean = ctx.getBean("cacheManager",EhCacheCacheManager.class);
 	}
 	
 	/*@Test

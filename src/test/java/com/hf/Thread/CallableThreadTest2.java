@@ -11,7 +11,6 @@ import java.util.concurrent.TimeoutException;
 public class CallableThreadTest2 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		String result = "";
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		FutureTask<String> future = new FutureTask<String>(

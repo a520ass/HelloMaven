@@ -1,9 +1,34 @@
-\xac\xed\x00\x05sr\x002org.apache.shiro.subject.SimplePrincipalCollection\xa
-8\x7fX%\xc6\xa3\bJ\x03\x00\x01L\x00\x0frealmPrincipalst\x00\x0fLjava/util/Map;xp
-sr\x00\x17java.util.LinkedHashMap4\xc0N\\\x10l\xc0\xfb\x02\x00\x01Z\x00\x0bacces
-sOrderxr\x00\x11java.util.HashMap\x05\a\xda\xc1\xc3\x16`\xd1\x03\x00\x02F\x00\nl
-oadFactorI\x00\tthresholdxp?@\x00\x00\x00\x00\x00\x00w\b\x00\x00\x00\x01\x00\x00
-\x00\x01t\x007com.hf.spring.jpa.common.realm.SystemAuthorizingRealm_0sr\x00\x17j
-ava.util.LinkedHashSet\xd8l\xd7Z\x95\xdd*\x1e\x02\x00\x00xr\x00\x11java.util.Has
-hSet\xbaD\x85\x95\x96\xb8\xb74\x03\x00\x00xpw\x0c\x00\x00\x00\x10?@\x00\x00\x00\
-x00\x00\x01t\x00\nsuperadminxx\x00w\x01\x01q\x00~\x00\x05x
+<!-- 开启查询缓存 -->
+        		<prop key="hibernate.cache.use_query_cache">true</prop>
+        		
+        		<!-- 开启二级缓存 -->  
+        		<prop key="hibernate.cache.use_second_level_cache">true</prop>
+        		<!--  二级缓存缓存的仅仅是对象，如果查询出来的是对象的一些属性，则不会被加到缓存中去-->
+        		<!-- 二级缓存区域名的前缀 -->  
+			<!--<prop key="hibernate.cache.region_prefix">h3test</prop>--> 
+        		<!-- 高速缓存提供程序 -->  
+        		<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+        		<!-- 指定缓存配置文件位置 -->
+        		
+				<!-- 强制Hibernate以更人性化的格式将数据存入二级缓存 -->  
+				<prop key="hibernate.cache.use_structured_entries">true</prop>  
+				
+				<!-- Hibernate将收集有助于性能调节的统计数据 -->  
+				<prop key="hibernate.generate_statistics">true</prop>
+				<!-- 控制是否应该向JDBC元数据来确定某些设置默认值  -->
+        		<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+        		
+        		
+        		
+        		
+        		<!-- 
+		配置二级缓存的策略 （和上面的二级缓存 一起）
+		ALL：所有的实体类都被缓存
+		NONE：所有的实体类都不被缓存. 
+		ENABLE_SELECTIVE：标识 @Cacheable(true) 注解的实体类将被缓存
+		DISABLE_SELECTIVE：缓存除标识 @Cacheable(false) 以外的所有实体类
+		UNSPECIFIED：默认值，JPA 产品默认值将被使用
+		
+    	 -->
+    	<!-- 或者这样配置  在jpaProperties中  <prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>，则不需要在实体内配置hibernate的 @cache标记，只要打上JPA的@cacheable标记即可默认开启该实体的2级缓存-->
+    	<property name="sharedCacheMode" value="ENABLE_SELECTIVE"></property>

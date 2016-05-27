@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table(name="SJPA_ORDERS")
 @Entity
@@ -17,6 +20,7 @@ public class Order {
 	private Integer id;
 	private String orderName;
 	private Customer customer;
+	private Customer customerTransient;
 	
 	@GeneratedValue
 	@Id
@@ -35,16 +39,27 @@ public class Order {
 		this.orderName = orderName;
 	}
 	
+	@JsonIgnore
 	@JoinColumn(name="CUSTOMER_ID")
-	@ManyToOne(cascade=CascadeType.REFRESH,fetch=FetchType.LAZY)
+	@ManyToOne(cascade=CascadeType.MERGE,fetch=FetchType.LAZY)
 	public Customer getCustomer() {
 		return customer;
 	}
 	public void setCustomer(Customer customer) {
+		this.customerTransient=customer;
 		this.customer = customer;
 	}
 	public Order() {
 		super();
 	}
+	@Transient
+	public Customer getCustomerTransient() {
+		return customerTransient;
+	}
+	public void setCustomerTransient(Customer customerTransient) {
+		this.customerTransient = customerTransient;
+		this.customer=customerTransient;
+	}
+	
 
 }

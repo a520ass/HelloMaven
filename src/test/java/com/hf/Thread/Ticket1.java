@@ -5,7 +5,6 @@ public class Ticket1 implements Runnable{
 	boolean flag=true;
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		while(flag){
 			if(ticket<=0){
 				flag=false;
@@ -15,13 +14,11 @@ public class Ticket1 implements Runnable{
 	}
 
 	private synchronized void saleTicket() {
-		// TODO Auto-generated method stub
 		try {
 			Thread.sleep(500L);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			System.out.println(Thread.currentThread().getName()+"---Âô³ö"+ticket--);
+			System.out.println(Thread.currentThread().getName()+"---ticketå‰©ä½™"+ticket--);
 	}
 }

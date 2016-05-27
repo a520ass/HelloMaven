@@ -9,7 +9,7 @@ import com.jacob.com.Variant;
 /**
  * 
  * @author hefeng
- * 将jacob.dll(32和64位)放入JDK的bin目录下  把jacob-1.18.jar放入maven中(1.18版本)
+ * 将jacob-1.14.3.zip里面的dll文件(32和64位)jacob-1.14.3-x86.dll  jacob-1.14.3-x64.dll放入JDK的bin目录下  maven引入jacob-1.14.3
  */
 public class ConvertToPdf {
 	/*转PDF格式值*/  
@@ -211,8 +211,8 @@ public class ConvertToPdf {
      */  
     public static void main(String[] args) {  
         ConvertToPdf d = new ConvertToPdf();  
-        d.convert2PDF("E:/MY文件夹/大三/中班绘本故事《小黑鱼》.ppt", "d:\\test.pdf");  
+        //d.convert2PDF("E:\\MY文件夹\\大三\\终稿.docx", "d:\\test.pdf");  
         //d.convert2PDF("g:\\testppt.pptx", "g:\\testppt.pdf");  
-       // d.convert2PDF("g:\\testexcel.xlsx", "g:\\testexcel.pdf");  
+        d.convert2PDF("E:/MY文件夹/大一/2014年最新CPU天梯图.xls", "d:\\test.pdf");  
     }  
 }

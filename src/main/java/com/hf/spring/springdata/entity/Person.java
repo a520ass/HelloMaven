@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name="SJPA_PERSONS")
-@Entity
+@Entity(name="com.hf.spring.springdata.entity.Person")
 public class Person {
 	
 	private Integer id;

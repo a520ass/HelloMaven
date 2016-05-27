@@ -15,7 +15,7 @@
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:database.properties" />
 	
 	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
-	<context:component-scan base-package="com.hf.spring.jpa" use-default-filters="false"><!-- base-package 如果多个，用“,”分隔 -->
+	<context:component-scan base-package="com.hf.spring.springdata" use-default-filters="false"><!-- base-package 如果多个，用“,”分隔 -->
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 	</context:component-scan>
@@ -83,10 +83,10 @@
 	<mvc:annotation-driven >
 	</mvc:annotation-driven>
 	
-	<!-- 支持Shiro对Controller的方法级AOP安全控制 begin-->
+	<!-- 支持Shiro对Controller的方法级AOP安全控制 begin
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
 		<property name="proxyTargetClass" value="true" />
-	</bean>
+	</bean>-->
 	<!--
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">

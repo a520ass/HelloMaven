@@ -55,6 +55,11 @@
 		//$.getJSON("${ctx}/sys/office/treeData",function(data){
 			//$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
 		//});
+		var flag=0;
+		$("#pickfiles").click(function(){
+			alert("dianjile");
+			flag=1;
+		})
 		
 		var uploader = new plupload.Uploader({
 			runtimes : 'html5,flash,silverlight,html4',
@@ -69,6 +74,7 @@
 			multipart_params: {
 				  "one": '1',
 				  "tr2":"何锋"
+				  
 			},
 
 			init: {
@@ -76,11 +82,16 @@
 					document.getElementById('filelist').innerHTML = '';
 
 					document.getElementById('uploadfiles').onclick = function() {
+						alert($("#de").val());
 						uploader.start();
 						return false;
 					};
 				},
-
+				
+				BeforeUpload:function(up,files){
+					uploader.setOption("multipart_params",{"de":$("#de").val(),"flag":flag});
+				},
+				
 				FilesAdded: function(up, files) {
 					plupload.each(files, function(file) {
 						document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
@@ -110,6 +121,7 @@
 	<div id="filelist">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
 	<br />
 	<div id="container">
+		<input type="text" id="de">
 	    <a id="pickfiles" href="javascript:;">[Select files]</a> 
 	    <a id="uploadfiles" href="javascript:;">[Upload files]</a>
 	</div>
@@ -129,7 +141,7 @@
 	<br>
 	<a href="${ctx}/test/testResponseEntity">testResponseEntity</a>
 	<br>
-	<shiro:hasPermission name="sys:insert">
+	
 	<form action="${ctx}/test/testHttpMessageConverter" method="post" enctype="multipart/form-data">
 		File:<input type="file" name="file">
 		Desc:<input type="text" name="desc">
@@ -218,6 +230,6 @@
 			type="text" name="price" value="1.3f"><br> <input
 			type="submit" value="testModelAttribute">
 	</form>
-	</shiro:hasPermission>
+	
 </body>
 </html>

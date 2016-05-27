@@ -1,7 +1,9 @@
 package com.hf.classloader;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 
 import org.junit.Test;
 
@@ -11,10 +13,17 @@ public class HelloClassLoader {
 	public void test1(){
 		HelloClassLoader helloClassLoader=new HelloClassLoader();
 		Class c=helloClassLoader.getClass();
+		//loader和sys是sun.misc.Launcher$AppClassLoader@4537ef34
+		//sun.misc.Launcher$AppClassLoader@4537ef34
 		ClassLoader loader=c.getClassLoader();
+		ClassLoader sys= ClassLoader.getSystemClassLoader();
+		URL[] urls=sun.misc.Launcher.getBootstrapClassPath().getURLs();
+		System.out.println(sys);
+		//sys.loadClass(name)
+		InputStream in=ClassLoader.getSystemClassLoader().getSystemResourceAsStream("java/lang/String.class");
 		System.out.println(loader);
 		System.out.println(loader.getParent());
-		System.out.println(loader.getParent().getParent());
+		System.out.println(loader.getParent().getParent());//父级为null、说明是bootstrap classloader ？？
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -34,28 +43,9 @@ public class HelloClassLoader {
 			//Class.forName("com.hf.classloader.Test2");
 			//使用Class.forName()来加载类，并指定ClassLoader，初始化时不执行静态块
 			//Class.forName("com.hf.classloader.Test2", false, loader);
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	public HelloClassLoader() {

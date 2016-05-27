@@ -3,11 +3,13 @@ package com.hf.spring.springdata.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hf.spring.springdata.repository.PersonRepository;
 
 @Service
+@Transactional
 public class PersonService {
 	
 	@Autowired

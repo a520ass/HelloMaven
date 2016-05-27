@@ -31,7 +31,6 @@ public class CallableThreadTest implements Callable<Boolean>{
 	
 	@Override
 	public Boolean call() throws Exception {
-		// TODO Auto-generated method stub
 		int i = 0;  
         for(i=0;i<100;i++)  
         {  

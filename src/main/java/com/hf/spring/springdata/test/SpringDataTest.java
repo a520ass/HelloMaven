@@ -4,12 +4,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
@@ -31,14 +33,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Sets;
+import com.hf.spring.springdata.entity.Category;
+import com.hf.spring.springdata.entity.Category_;
 import com.hf.spring.springdata.entity.Customer;
 import com.hf.spring.springdata.entity.Department;
+import com.hf.spring.springdata.entity.Item;
 import com.hf.spring.springdata.entity.Manager;
 import com.hf.spring.springdata.entity.Order;
 import com.hf.spring.springdata.entity.Person;
 import com.hf.spring.springdata.entity.Person_;
+import com.hf.spring.springdata.repository.CategoryRepository;
 import com.hf.spring.springdata.repository.CustomerRepository;
 import com.hf.spring.springdata.repository.DepartmentRepository;
+import com.hf.spring.springdata.repository.ItemRepository;
 import com.hf.spring.springdata.repository.ManagerRepository;
 import com.hf.spring.springdata.repository.OrderRepository;
 import com.hf.spring.springdata.repository.PersonRepository;
@@ -158,8 +166,8 @@ public class SpringDataTest {
 		//默认情况下 单向一对多和多对一，先保存一的一端会保错，需要加入级联
 		//@OneToMany(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
 		customerRepository.save(customer);
-		orderRepository.save(order1);
-		orderRepository.save(order2);
+		//orderRepository.save(order1);
+		//orderRepository.save(order2);
 		//先保存n的一端。则不需要上述注解
 		//customerRepository.save(customer);
 	}
@@ -273,12 +281,12 @@ public class SpringDataTest {
 	public void testJpaSpecificationExecutor(){
 		
 		PersonRepository personRepository=ctx.getBean(PersonRepository.class);
-		int page=0;//0为第一页
+		int page=0;
 		int size=2;
 		//desc从大到小
 		org.springframework.data.domain.Sort.Order order1=new org.springframework.data.domain.Sort.Order(Direction.DESC, "id");
 		Sort sort=new Sort(order1);
-		PageRequest pageable=new PageRequest(page, size,sort);
+		PageRequest pageable=new PageRequest(page, size,sort);//第一个参数，0为第一页
 		Specification<Person> specification=new Specification<Person>() {
 
 			@Override
@@ -406,6 +414,7 @@ public class SpringDataTest {
 		
 		//2、构造Predicate
 		Expression<Integer> expression = root.get(Person_.id);
+		//
 		List<Predicate> predicatesList=new ArrayList<Predicate>();
 		predicatesList.add(expression.in(1,2,3));
 		criteriaQuery.where(predicatesList.toArray(new Predicate[predicatesList.size()]));
@@ -433,6 +442,24 @@ public class SpringDataTest {
 		List<Person> result =typedQuery.getResultList();
 		System.out.println(result.toString());
 	}
+	
+	/*@Test
+	public void testJpaCriteria8(){
+		Set<Item> s=Sets.newHashSetWithExpectedSize(0);
+		ItemRepository itemRepository = ctx.getBean(ItemRepository.class);
+		s.add(itemRepository.findOne(1));
+		
+		EntityManager em=ctx.getBean(EntityManager.class);
+		CriteriaBuilder criteriaBuilder=em.getCriteriaBuilder();
+		CriteriaQuery<Category> criteriaQuery = criteriaBuilder.createQuery(Category.class);
+		Root<Category> root = criteriaQuery.from(Category.class);
+		Predicate predicate = criteriaBuilder(root.get(Category_.items), s);
+		
+		criteriaQuery.where(predicate);
+		TypedQuery<Category> typedQuery=em.createQuery(criteriaQuery);
+		List<Category> result =typedQuery.getResultList();
+		System.out.println(result);
+	}*/
 	
 	/**
 	 * 测试JpaCriteria

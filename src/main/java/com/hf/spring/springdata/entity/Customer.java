@@ -17,6 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Cacheable(true)
 @Table(name="SJPA_CUTOMERS")
@@ -31,6 +34,7 @@ public class Customer {
 	private Date birth;
 	
 	private Set<Order> orders =new HashSet<>();
+	private Set<Order> ordersTransient =new HashSet<>();
 	
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Id
@@ -79,15 +83,26 @@ public class Customer {
 	
 	//单向1-n的关联关系
 	//@JoinColumn(name="CUSTOMER_ID")
-	@OneToMany(cascade=CascadeType.REMOVE,fetch = FetchType.LAZY,mappedBy="customer")
+	@JsonIgnore
+	@OneToMany(cascade=CascadeType.MERGE,fetch = FetchType.LAZY,mappedBy="customer")
 	public Set<Order> getOrders() {
 		return orders;
 	}
 	public void setOrders(Set<Order> orders) {
+		this.ordersTransient=orders;
 		this.orders = orders;
 	}
 	public Customer() {
 		super();
 	}
+	@Transient
+	public Set<Order> getOrdersTransient() {
+		return ordersTransient;
+	}
+	public void setOrdersTransient(Set<Order> ordersTransient) {
+		this.ordersTransient = ordersTransient;
+		this.orders=ordersTransient;
+	}
+	
 	
 }

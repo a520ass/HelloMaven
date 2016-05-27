@@ -32,7 +32,7 @@ public class ServiceAspect {
 			for(int i=0;i<args.length;i++){
 				//System.out.println(args[i].getClass().getName());
 				if(StringUtils.isBlank(args[i].toString())){
-					log.warn("参数为空:"+args);
+					log.error("参数为空: "+args[i]+" 请检查");
 				}
 			}
 		}

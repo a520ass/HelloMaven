@@ -59,6 +59,7 @@ public class TestReflection {
 				System.out.println("" + modifier + " " + type + " " + name
 						+ ";");
 			}
+			//field.
 		}
 		// 获取类的构造方法
 		Constructor[] constructors = c1.getDeclaredConstructors();
@@ -134,7 +135,7 @@ public class TestReflection {
 			SecurityException, IllegalArgumentException,
 			InstantiationException, IllegalAccessException,
 			NoSuchMethodException, InvocationTargetException {
-		//test01();
-		test02();
+		test01();
+		//test02();
 	}
 }

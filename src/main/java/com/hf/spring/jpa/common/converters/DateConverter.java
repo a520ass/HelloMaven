@@ -16,12 +16,11 @@ public class DateConverter implements Converter<String, Date>{
 	
 	@Override
 	public Date convert(String source) {
-		// TODO Auto-generated method stub
 		if (source != null) {
 			try {
 				return DateUtils.parseDate(source,parsePatterns);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 		return null;

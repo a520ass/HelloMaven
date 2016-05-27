@@ -22,8 +22,8 @@
 	<!-- 加载配置文件   -->
 	<context:property-placeholder ignore-unresolvable="true" location="classpath:database.properties"/>
 	
-	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}")  方式引用 -->
-    <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>
+	<!-- 加载应用属性实例，可通过  @Value("#{APP_PROP['jdbc.driver']}")  方式引用 
+    <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>-->
 
      <!-- c3p0连接池  hibernate jpa-->
      <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -47,17 +47,11 @@
     		<props>
     			<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
     			<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
-        		<prop key="hibernate.format_sql">true</prop>
+        		<prop key="hibernate.format_sql">false</prop>
        			<prop key="hibernate.show_sql">true</prop>
         		<prop key="hibernate.hbm2ddl.auto">update</prop>
-        		
-        		<prop key="hibernate.cache.use_second_level_cache">true</prop>
-        		<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
-        		<prop key="hibernate.cache.use_query_cache">true</prop>
-        		<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
     		</props>
     	</property>
-    	<property name="sharedCacheMode" value="ENABLE_SELECTIVE"></property>
     </bean>
     
     <!-- 配置事务 -->

@@ -3,30 +3,38 @@ package com.hf.spring.jpa.web;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.cache.Cache;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +46,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.aliyun.webupload.WebUploadUtils;
-import com.hf.spring.jpa.common.mapper.JsonMapper;
-import com.hf.spring.jpa.common.security.shiro.session.RedisCacheManager;
-import com.hf.spring.jpa.common.security.shiro.session.RedisSessionDAO;
+import com.hf.reflection.Reflections;
+import com.hf.spring.jpa.entity.Department;
 import com.hf.spring.jpa.entity.Employee;
 import com.hf.spring.jpa.entity.User;
 import com.hf.spring.jpa.service.DepartmentService;
@@ -65,7 +71,10 @@ public class TestController {
 	@Autowired
 	private ResourceBundleMessageSource messageSource;
 	@Autowired
-	private RedisSessionDAO sessionDAO;
+	private SessionDAO sessionDAO;
+	
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 	
 	@Autowired
 	private RedisCacheManager redisCacheManager;
@@ -76,27 +85,54 @@ public class TestController {
         Collection<Session> sessions =  sessionDAO.getActiveSessions();  
         model.addAttribute("sessions", sessions);  
         model.addAttribute("sesessionCount", sessions.size());  
-        return sessions;  
+        return sessions;
     }
 	
 	@RequestMapping("/redis")
 	@ResponseBody
     public Object redis(Model model) {  
-        Cache<Object, Object> cache = redisCacheManager.getCache("mycache");
-        Object o = cache.put("diycache", "啦啦啦贝贝，45df");
-        String string = null;
-        try {
-			byte[] bytes = o.toString().getBytes("UTF-8");
-			string = new String(bytes);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-        return string;  
+		redisCacheManager.getCache("diycache").put("re", "hefen");
+		redisTemplate.opsForValue().set("werew", "laa我的贝贝all");
+        Object object = redisTemplate.opsForValue().get("werew");
+        return object;
     }
 	
 	@RequestMapping("/test")
 	public String test(Map<String,Object> map){
-		map.put("department", departmentService.findDepartmentById(124));
+		Department department1 = departmentService.findDepartmentById(124);
+		map.put("department", department1);
+		
+		try {
+			Field field=Reflections.getAccessibleField(department1, "employees");
+			Object object = field.get(department1);
+			Hibernate.initialize(object);
+			Set<Employee> value = (Set<Employee>) Reflections.getFieldValue(object, "set");
+			System.out.println(object.getClass().getCanonicalName());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		/*String name = department1.getEmployees().getClass().getName();
+		Hibernate.initialize(department1.getEmployees());
+		String name1 = department1.getEmployees().getClass().getName();*/
+		
+		Employee findEmplyeeById = employeeService.findEmplyeeById(11);
+		try {
+			/*Field field = findEmplyeeById.getClass().getDeclaredField("department");
+			field.setAccessible(true);*/
+			Field field=Reflections.getAccessibleField(findEmplyeeById, "department");
+			Object object = field.get(findEmplyeeById);
+			Hibernate.initialize(object);
+			/*Field handlerField = object.getClass().getDeclaredField("handler");
+			handlerField.setAccessible(true);*/
+			Field handlerField=Reflections.getAccessibleField(object, "handler");
+			Object proxyobject = handlerField.get(object);
+			Department department = (Department) Reflections.getFieldValue(proxyobject, "target");
+			System.out.println(proxyobject.getClass().getName());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		log.info("department put");
 		return "success";
 	}
@@ -176,6 +212,12 @@ public class TestController {
 	        appendFile(file.getInputStream(), destFile);  
 	        if (chunk == chunks - 1) {  
 	            log.info("上传完成");
+	            //FileInputStream openInputStream = FileUtils.openInputStream(destFile);
+	            //byte[] byteArray = IOUtils.toByteArray(openInputStream);
+	            String md5 = DigestUtils.md5Hex(FileUtils.openInputStream(destFile));//使用一次后。后面使用需要重新得到输入流
+	            String sha1 = DigestUtils.sha1Hex(FileUtils.openInputStream(destFile));
+	            //int length = IOUtils.toByteArray(openInputStream).length;
+	            System.err.println("md5:"+md5+", sha1:"+sha1+",  size:"+destFile.length());
 	        }else {
 	        	log.info("还剩["+(chunks-1-chunk)+"]个块文件");
 	        }
@@ -227,6 +269,7 @@ public class TestController {
 		byte[] b = new byte[1024];
 		int n = 0;
 		try {
+			//TestController.class.getClassLoader()
 			inputStream = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream("/note.txt");
 			outputStream = response.getOutputStream();

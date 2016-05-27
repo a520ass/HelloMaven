@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hf.spring.jpa.annotation.CacheKey;
 import com.hf.spring.jpa.annotation.Cacheable;
 import com.hf.spring.jpa.annotation.Cacheable.KeyMode;
 import com.hf.spring.jpa.dao.UserDao;
@@ -21,21 +20,14 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	public User findUserById(int id) {
-		// TODO Auto-generated method stub
 		return userDao.findById(id);
 	}
 	
-	//@Cacheable(expire=3000,keyMode=KeyMode.ALL)
+	@Cacheable(expire=3000,keyMode=KeyMode.ALL)
+	//@Cacheable(value = "user", key = "#username")
 	@Override
 	public User findUserByUsername(String username) {
-		// TODO Auto-generated method stub
-		try {
-			return userDao.findByUsername(username);
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return new User();
+		return userDao.findByUsername(username);
 	}
 
 }

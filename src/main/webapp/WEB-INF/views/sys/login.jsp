@@ -8,7 +8,7 @@
 <title>首页</title>
 </head>
 <body style="overflow-x: hidden">
-	<form id="loginForm" class="form-horizontal" role="form" action="${ctx}/sys/login"
+	<form id="loginForm" class="form-horizontal" role="form" action="${ctx}/login"
 		method="post">
 		<div class="form-group">
 	      <label for="username" class="col-sm-2 control-label">用户名</label>
@@ -61,7 +61,7 @@
 			type="submit" value="登 录" />&nbsp;&nbsp;
 		-->
 	</form>
-	<label id="responseText"></label>
+	<label id="responseText">${status}</label>
 </body>
 <script type="text/javascript">
 	$(document).ready(function() {
