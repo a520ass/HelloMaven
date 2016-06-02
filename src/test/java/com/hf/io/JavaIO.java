@@ -1,10 +1,13 @@
 package com.hf.io;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.URISyntaxException;
@@ -30,7 +33,6 @@ public class JavaIO {
 					fos.write(buffer, 0, n);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally{
 				resourceAsStream.close();
@@ -54,5 +56,34 @@ public class JavaIO {
 			}
 			reader.close();
 			pw.close();
+		}
+		
+		@Test
+		public void test1(){
+			System.err.println(this.getClass().getName());
+			Runtime rt = Runtime.getRuntime();
+			long maxMemory = rt.maxMemory();
+			try {
+				Process process = rt.exec("java -version");
+				
+				InputStream stderr = process.getErrorStream();
+				//InputStream stderr = process.getInputStream();
+				InputStreamReader isr = new InputStreamReader(stderr);
+				/*BufferedReader br = new BufferedReader(isr);
+				String line = null;
+				while ((line = br.readLine()) != null)
+				System.out.println(line);
+				System.out.println("");
+				*/
+				LineNumberReader input = new LineNumberReader (isr); 
+	            String line; 
+	            while ((line = input.readLine ()) != null) 
+
+	                System.out.println(line); 
+	            int exitVal = process.waitFor();
+				System.out.println("Process exitValue: " + exitVal);
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 }

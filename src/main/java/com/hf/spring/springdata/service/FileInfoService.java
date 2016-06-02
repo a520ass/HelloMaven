@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hf.spring.springdata.dynamic.TargetDataSource;
 import com.hf.spring.springdata.entity.FileInfo;
 import com.hf.spring.springdata.repository.FileInfoRepository;
 
@@ -18,6 +19,7 @@ public class FileInfoService {
 	@Autowired
 	private FileInfoRepository dao;
 	
+	@TargetDataSource(name = "dataSource2")
 	@Transactional
 	public FileInfo saveEntity(FileInfo entity){
 		if (StringUtils.isBlank(entity.getId())){

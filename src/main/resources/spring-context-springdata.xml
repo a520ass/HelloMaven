@@ -6,12 +6,14 @@
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:repository="http://www.springframework.org/schema/data/repository"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/data/repository http://www.springframework.org/schema/data/repository/spring-repository-1.7.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 	
 	<!-- 配置自动扫描的包  不扫描 spring mvc  controler控制器-->
 	<context:component-scan base-package="com.hf.spring.springdata">
@@ -26,7 +28,7 @@
     <util:properties id="APP_PROP" location="classpath:database.properties" local-override="true"/>-->
 
      <!-- c3p0连接池  hibernate jpa-->
-     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+     <bean id="dataSource1" class="com.mchange.v2.c3p0.ComboPooledDataSource">
      	<property name="jdbcUrl" value="${jdbc.url}"></property>
      	<property name="user" value="${jdbc.username}"></property>
      	<property name="password" value="${jdbc.password}"></property>
@@ -35,6 +37,72 @@
      	<property name="initialPoolSize" value="${jdbc.pool.init}"></property>
      	<property name="maxPoolSize" value="${jdbc.pool.maxActive}"></property>
      </bean>
+     
+     <bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+     	<property name="jdbcUrl" value="${jdbc.url2}"></property>
+     	<property name="user" value="${jdbc.username}"></property>
+     	<property name="password" value="${jdbc.password}"></property>
+     	<property name="driverClass" value="${jdbc.driverClassName}"></property>
+     	
+     	<property name="initialPoolSize" value="${jdbc.pool.init}"></property>
+     	<property name="maxPoolSize" value="${jdbc.pool.maxActive}"></property>
+     </bean>
+     
+     <!-- 动态数据源切换 -->
+     <bean id="dataSource" class="com.hf.spring.springdata.dynamic.DynamicDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry value-ref="dataSource1" key="dataSource1"></entry>
+				<entry value-ref="dataSource2" key="dataSource2"></entry>
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="dataSource1">
+		</property>
+	</bean>
+     
+     <!-- <bean id="dataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean"
+        init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="ds1" />
+        <property name="xaDataSourceClassName" value="com.mysql.jdbc.jdbc2.optional.MysqlXADataSource" />
+        <property name="xaProperties">
+            <props>
+                <prop key="URL">${jdbc.url}</prop>
+                <prop key="user">${jdbc.username}</prop>
+                <prop key="password">${jdbc.password}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="5" />
+        <property name="maxPoolSize" value="20" />
+        <property name="maxIdleTime" value="60" />
+        <property name="testQuery">
+            <value>select 1</value>
+        </property>
+    </bean> -->
+    
+    <!-- <bean id="userTransactionService" class="com.atomikos.icatch.config.UserTransactionServiceImp" 
+            init-method="init" destroy-method="shutdownForce">
+        <constructor-arg>
+            <props>
+                <prop key="com.atomikos.icatch.service">com.atomikos.icatch.standalone.UserTransactionServiceFactory</prop>
+            </props>
+        </constructor-arg>
+    </bean> -->
+
+    <!-- <bean id="atomikosTransactionManager"  
+          class="com.atomikos.icatch.jta.UserTransactionManager"  
+          init-method="init" destroy-method="close" >  
+        <property name="forceShutdown" value="false"/>
+    </bean>
+
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp" >  
+        <property name="transactionTimeout" value="300"/>  
+    </bean> -->
+    
+    <!-- 分布式事务 
+    <bean id="jtaTransactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">  
+        <property name="transactionManager" ref="atomikosTransactionManager"/>  
+        <property name="userTransaction" ref="atomikosUserTransaction"/>  
+    </bean>-->
     
     <!-- 配置jpa的entityManagerFactory -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -54,13 +122,16 @@
     	</property>
     </bean>
     
-    <!-- 配置事务 -->
+    <!-- 配置事务管理器 -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
     	<property name="entityManagerFactory" ref="entityManagerFactory"></property>
     </bean>
     
     <!-- 配置支持基于注解的事务 -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <tx:annotation-driven transaction-manager="transactionManager" order="0"/>
     
     <jpa:repositories base-package="com.hf.spring.springdata" entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+    
+    <!--  @AspectJ支持  注解  默认jdk代理-->
+    <aop:aspectj-autoproxy />
 </beans>

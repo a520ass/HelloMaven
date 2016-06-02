@@ -23,7 +23,7 @@ public class CacheableAop {
 	@Autowired 
 	private RedisTemplate redisTemplate;
 	
-	@Around("@annotation(cache)")
+	@Around("@annotation(cache)")//参数中 Cacheable注解类型的参数名字为 cache。所以这样写。或者@annotation(com.hf.spring.jpa.annotation.Cacheable)
 	public Object cached(final ProceedingJoinPoint pjp,Cacheable cache) throws Throwable {
 		
 		String key=getCacheKey(pjp, cache);
